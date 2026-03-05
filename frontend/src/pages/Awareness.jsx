@@ -3,96 +3,137 @@
 const Awareness = () => {
   const navigate = useNavigate();
 
-  const symptoms = [
-    { text: 'Irregular menstrual periods', icon: '📅' },
-    { text: 'Excess facial and body hair (hirsutism)', icon: '🪒' },
-    { text: 'Severe acne and male-pattern baldness', icon: '💆' },
-    { text: 'Ovaries might be enlarged with follicles', icon: '🔬' },
-    { text: 'Weight gain or difficulty losing weight', icon: '⚖️' },
-    { text: 'Darkening of skin (acanthosis nigricans)', icon: '🩺' },
-  ];
-
-  const stats = [
-    { value: '1 in 10', label: 'Women affected globally', color: 'from-violet-500 to-fuchsia-500' },
-    { value: '70%', label: 'Cases go undiagnosed', color: 'from-orange-500 to-amber-500' },
-    { value: '50%', label: 'Risk of Type 2 Diabetes', color: 'from-red-500 to-pink-500' },
+  const preventionSteps = [
+    { title: 'Routine Medical Checkups', desc: 'Annual gynecological visits, pelvic ultrasounds, and complete hormonal blood panels.', icon: '🩺', color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { title: 'Targeted Nutrition', desc: 'Focusing on low-glycemic foods, prioritizing protein, and managing insulin spikes.', icon: '🥗', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { title: 'Cortisol Management', desc: 'Incorporating daily stress-reduction protocols like breathwork and structured sleep hygiene.', icon: '🧘', color: 'text-violet-600', bg: 'bg-violet-50' },
+    { title: 'Consistent Mobility', desc: 'Combining resistance training with low-intensity steady state (LISS) cardio.', icon: '🏃‍♀️', color: 'text-rose-600', bg: 'bg-rose-50' },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-teal-50 to-white py-16 px-6">
-      <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <header className="text-center mb-16">
-          <div className="inline-block bg-violet-100 text-violet-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-4">
-            📚 Education & Awareness
+    <div className="min-h-screen bg-[#FFF8F6] text-[#4A4A4A] font-sans">
+      {/* Header */}
+      <header className="w-full bg-[#FFF8F6]/80 backdrop-blur-md border-b border-rose-50 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
+            <div className="w-8 h-8 bg-[#E88C9A] rounded-xl flex items-center justify-center text-white font-bold shadow-sm text-lg">S</div>
+            <span className="text-xl font-bold text-[#5C3A4D] tracking-tight">Saheli</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 mb-4 leading-tight">
-            Understanding <span className="bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">PCOS</span>
-          </h1>
-          <p className="text-xl text-slate-500 max-w-2xl mx-auto">Empowering you with knowledge for a healthier tomorrow.</p>
-        </header>
-
-        {/* Stats Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          {stats.map(stat => (
-            <div key={stat.label} className="bg-white p-6 rounded-2xl shadow-lg border border-slate-100 text-center hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-              <p className={`text-4xl font-extrabold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent mb-2`}>{stat.value}</p>
-              <p className="text-sm text-slate-500 font-medium">{stat.label}</p>
-            </div>
-          ))}
+          <button onClick={() => navigate('/login')} className="text-sm font-bold text-[#4A4A4A] hover:text-[#E88C9A] transition-colors">
+            Log in
+          </button>
         </div>
+      </header>
 
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 hover:shadow-xl transition-all duration-300">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center text-xl">🧬</div>
-              <h2 className="text-2xl font-bold text-slate-800">What is PCOS?</h2>
-            </div>
-            <p className="text-slate-600 leading-relaxed mb-4">
-              PCOS is a common hormonal disorder among women of reproductive age. It affects how a woman's ovaries work, often leading to irregular periods,
-              high levels of masculine hormones (androgens), and small collections of fluid (follicles) in the ovaries.
-            </p>
-            <p className="text-slate-600 leading-relaxed">
-              While the exact cause is unknown, early diagnosis and treatment along with weight loss may reduce the risk of long-term complications
-              such as type 2 diabetes and heart disease.
-            </p>
-          </div>
+      {/* Hero Content for Awareness */}
+      <section className="pt-20 pb-24 text-center px-6 bg-[#FFF8F6]">
+        <div className="inline-block bg-[#8FBF9F]/10 border border-[#8FBF9F]/20 text-[#8FBF9F] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6">
+          Checkups & Prevention
+        </div>
+        <h1 className="text-4xl md:text-6xl font-extrabold text-[#5C3A4D] mb-6 tracking-tight max-w-4xl mx-auto leading-tight">
+          Proactive management changes everything.
+        </h1>
+        <p className="text-lg md:text-xl text-[#4A4A4A] max-w-2xl mx-auto leading-relaxed font-medium">
+          While PCOS has no strict "cure", its symptoms can be highly managed or even reversed through rigorous tracking, clinical checkups, and smart lifestyle adjustments.
+        </p>
+      </section>
 
-          <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 hover:shadow-xl transition-all duration-300">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center text-xl">⚠️</div>
-              <h2 className="text-2xl font-bold text-slate-800">Common Symptoms</h2>
+      {/* Checkup & Prevention Focus */}
+      <section className="py-20 bg-white border-y border-rose-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-3xl font-extrabold text-[#5C3A4D] mb-6 tracking-tight">The Diagnostic & Preventative Clinical Pipeline</h2>
+              <p className="text-[#4A4A4A] text-lg leading-relaxed mb-10 font-medium">
+                A definitive clinical checkup involves evaluating your androgen levels, assessing ovarian physiology via ultrasound, and mapping out a foundational preventative routine to avoid long-term risks like diabetes and cardiovascular stress.
+              </p>
+              <div className="space-y-6">
+                {preventionSteps.map(step => (
+                  <div key={step.title} className="flex gap-5 items-start p-5 rounded-3xl border border-rose-50 hover:border-rose-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] hover:shadow-sm transition-all bg-[#FFF8F6]">
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 bg-white border border-rose-50 shadow-sm`}>
+                      {step.icon}
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-[#5C3A4D] mb-1">{step.title}</h4>
+                      <p className="text-[#4A4A4A] text-sm leading-relaxed font-medium">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="space-y-3">
-              {symptoms.map(s => (
-                <div key={s.text} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-violet-50 transition-colors">
-                  <span className="text-lg flex-shrink-0">{s.icon}</span>
-                  <span className="text-slate-700 text-sm font-medium">{s.text}</span>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-tr from-rose-100 to-[#E88C9A]/20 rounded-[3rem] transform rotate-3 scale-105 z-0"></div>
+              <div className="relative z-10 bg-white border border-rose-100 rounded-[3rem] p-10 shadow-xl overflow-hidden">
+                <div className="bg-[#FFF8F6] border border-rose-50 rounded-2xl p-6 mb-6">
+                  <p className="text-xs uppercase tracking-widest font-bold text-[#E88C9A] mb-2">Clinical Note</p>
+                  <p className="text-lg font-bold text-[#5C3A4D] leading-relaxed italic">"Early intervention and systematic data tracking are the most critical factors in mitigating PCOS symptom progression over a decade."</p>
                 </div>
-              ))}
+                <ul className="space-y-4">
+                  <li className="flex items-center gap-3 text-sm font-bold text-[#4A4A4A]">
+                    <span className="w-6 h-6 rounded-full bg-[#8FBF9F]/20 text-[#8FBF9F] flex items-center justify-center text-xs">✓</span> Fasting Glucose & Insulin Tests
+                  </li>
+                  <li className="flex items-center gap-3 text-sm font-bold text-[#4A4A4A]">
+                    <span className="w-6 h-6 rounded-full bg-[#8FBF9F]/20 text-[#8FBF9F] flex items-center justify-center text-xs">✓</span> Thyroid Function (TSH)
+                  </li>
+                  <li className="flex items-center gap-3 text-sm font-bold text-[#4A4A4A]">
+                    <span className="w-6 h-6 rounded-full bg-[#8FBF9F]/20 text-[#8FBF9F] flex items-center justify-center text-xs">✓</span> Lipid Profile Checks
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* CTA */}
-        <div className="bg-gradient-to-r from-violet-700 to-fuchsia-700 p-12 rounded-3xl shadow-2xl text-center relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="relative z-10">
-            <h3 className="text-3xl md:text-4xl font-extrabold text-white mb-4">Why Early Prediction Matters</h3>
-            <p className="text-violet-100 mb-10 max-w-2xl mx-auto text-lg leading-relaxed">
-              Early awareness allows for lifestyle modifications that can reverse many symptoms and prevent future health issues.
-              Understanding your body is the first step toward healing.
-            </p>
-            <button
-              onClick={() => navigate('/questionnaire')}
-              className="bg-white text-violet-700 px-10 py-4 rounded-2xl text-lg font-bold shadow-xl hover:shadow-2xl hover:bg-violet-50 transition-all duration-300 active:scale-95"
-            >
-              Take the Assessment →
-            </button>
+      {/* PLATFORM FEATURES (Moved from Welcome) */}
+      <section className="py-24 bg-[#FFF8F6] border-b border-rose-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-[#5C3A4D] mb-6 tracking-tight">How Saheli facilitates prevention.</h2>
+            <p className="text-lg text-[#4A4A4A] font-medium max-w-2xl mx-auto">Stop guessing. Get data-driven insights and actionable plans tailored to your exact hormonal profile using our clinical-grade SaaS platform.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+            {/* Feature 1 */}
+            <div className="p-10 rounded-3xl bg-white border border-rose-50 hover:border-rose-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md transition-all group">
+              <div className="w-14 h-14 bg-rose-50 border border-rose-100 text-[#E88C9A] rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-[#E88C9A] group-hover:text-white transition-colors shadow-sm">
+                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              </div>
+              <h3 className="text-xl font-bold text-[#5C3A4D] mb-4 tracking-tight">AI Risk Detection</h3>
+              <p className="text-[#4A4A4A] leading-relaxed font-medium">Advanced machine learning analyzes your symptoms to detect PCOS severity and risk factors with clinical precision.</p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="p-10 rounded-3xl bg-white border border-rose-50 hover:border-rose-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md transition-all group">
+              <div className="w-14 h-14 bg-rose-50 border border-rose-100 text-[#8FBF9F] rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-[#8FBF9F] group-hover:text-white transition-colors shadow-sm">
+                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+              </div>
+              <h3 className="text-xl font-bold text-[#5C3A4D] mb-4 tracking-tight">Personalized Protocols</h3>
+              <p className="text-[#4A4A4A] leading-relaxed font-medium">Receive strictly tailored dietary recommendations, exercise routines, and stress management techniques matching your body.</p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="p-10 rounded-3xl bg-white border border-rose-50 hover:border-rose-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md transition-all group">
+              <div className="w-14 h-14 bg-rose-50 border border-rose-100 text-[#C8B6E2] rounded-2xl flex items-center justify-center text-2xl mb-8 group-hover:bg-[#C8B6E2] group-hover:text-white transition-colors shadow-sm">
+                <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+              </div>
+              <h3 className="text-xl font-bold text-[#5C3A4D] mb-4 tracking-tight">24/7 AI Assistant</h3>
+              <p className="text-[#4A4A4A] leading-relaxed font-medium">Got a question at 2 AM? Your dedicated clinical chatbot is trained on extensive medical literature to help you instantly.</p>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* CTA Footer */}
+      <section className="py-24 bg-white border-t border-rose-50 text-center px-6">
+        <h2 className="text-3xl md:text-5xl font-extrabold mb-8 tracking-tight max-w-3xl mx-auto leading-tight text-[#5C3A4D]">Implement your prevention strategy today.</h2>
+        <button
+          onClick={() => navigate('/questionnaire')}
+          className="bg-[#E88C9A] hover:bg-[#D97A88] text-white px-10 py-5 rounded-2xl text-lg font-bold shadow-sm transition-all active:scale-95"
+        >
+          Take the Free Assessment
+        </button>
+      </section>
     </div>
   );
 };

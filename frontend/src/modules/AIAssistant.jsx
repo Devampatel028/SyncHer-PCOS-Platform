@@ -2,7 +2,7 @@
 import { apiCall } from '../services/api';
 
 const AIAssistant = () => {
-  const [messages, setMessages] = useState([{ role: 'assistant', text: "Hello! I'm your SyncHer AI Assistant 💙 How can I help with your PCOS care today?" }]);
+  const [messages, setMessages] = useState([{ role: 'assistant', text: "Hello! I'm your SyncHer AI Assistant. How can I assist with your clinical PCOS protocol today?" }]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const chatEndRef = useRef(null);
@@ -22,85 +22,95 @@ const AIAssistant = () => {
       const data = await apiCall('/chatbot', 'POST', { message: userMsg });
       setMessages(prev => [...prev, { role: 'assistant', text: data.reply }]);
     } catch (err) {
-      setMessages(prev => [...prev, { role: 'assistant', text: "Sorry, I encountered an error. Please try again." }]);
+      setMessages(prev => [...prev, { role: 'assistant', text: "System anomaly detected. Unable to reach AI server." }]);
     } finally {
       setLoading(false);
     }
   };
 
   const quickActions = [
-    { label: 'Diet Tips', q: 'What should I eat for PCOS?', icon: '🥗' },
-    { label: 'Exercise', q: 'Best exercises for PCOS?', icon: '🧘' },
-    { label: 'Symptoms', q: 'How to manage PCOS symptoms?', icon: '💊' },
-    { label: 'Mental Health', q: 'How does stress affect PCOS?', icon: '🍃' },
+    { label: 'Diet Protocols', q: 'What nutritional protocols are best for my PCOS?', icon: '🥗' },
+    { label: 'Mobility', q: 'Recommend optimal mobility workouts.', icon: '🧘' },
+    { label: 'Symptom Diagnostics', q: 'How to manage specific PCOS symptoms?', icon: '📋' },
+    { label: 'Cortisol Optimization', q: 'How does stress affect my hormones?', icon: '🧠' },
   ];
 
   return (
-    <>
-      <div className="flex items-center gap-4 mb-6">
-        <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center text-2xl shadow-md">🤖</div>
+    <div className="space-y-6 animate-fade-in font-sans h-[calc(100vh-140px)] flex flex-col">
+      {/* Header */}
+      <div className="flex items-center gap-5 flex-shrink-0">
+        <div className="w-14 h-14 bg-white border border-rose-50 rounded-2xl flex items-center justify-center text-2xl shadow-sm text-[#E88C9A]">🤖</div>
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-800">SyncHer AI Assistant</h1>
-          <p className="text-sm text-slate-400">Your personal PCOS care companion</p>
+          <h1 className="text-3xl font-extrabold text-[#5C3A4D] tracking-tight">Clinical Intelligence</h1>
+          <p className="text-sm text-[#4A4A4A] font-medium">Real-time dynamic health protocol consultant</p>
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {quickActions.map(qa => (
-          <button key={qa.label} onClick={() => { setInput(qa.q); }}
-            className="flex items-center gap-1.5 px-4 py-2 bg-white rounded-full border border-slate-200 text-xs font-bold text-slate-600 hover:bg-violet-50 hover:border-violet-200 hover:text-violet-700 transition-all duration-200 shadow-sm">
-            <span>{qa.icon}</span>{qa.label}
-          </button>
-        ))}
-      </div>
+      {/* Chat Interface Container */}
+      <div className="bg-white rounded-[3xl] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-rose-50 overflow-hidden flex flex-col flex-1 relative">
 
-      {/* Chat Container */}
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col h-[62vh] border border-slate-100">
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-slate-50/50 to-white">
+        {/* Quick Actions (Pinned to top inside container for clean SaaS look) */}
+        <div className="bg-[#FFF8F6] border-b border-rose-50 p-4 overflow-x-auto flex gap-3 flex-shrink-0 custom-scrollbar">
+          {quickActions.map(qa => (
+            <button key={qa.label} onClick={() => { setInput(qa.q); }}
+              className="flex items-center gap-2 px-4 py-2 bg-white border border-rose-100 rounded-xl text-xs font-bold text-[#4A4A4A] hover:bg-[#FFF8F6] hover:border-[#E88C9A]/40 hover:text-[#5C3A4D] transition-colors shadow-sm whitespace-nowrap">
+              <span className="text-base">{qa.icon}</span>{qa.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Message Thread */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-white custom-scrollbar">
           {messages.map((msg, idx) => (
             <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[80%] p-4 rounded-2xl shadow-sm text-sm leading-relaxed ${
-                msg.role === 'user'
-                  ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-br-md'
-                  : 'bg-white border border-slate-100 text-slate-700 rounded-bl-md'
-              }`}>
+              <div className={`max-w-[85%] p-5 rounded-[2xl] text-sm md:text-base leading-relaxed font-bold shadow-sm ${msg.role === 'user'
+                ? 'bg-gradient-to-r from-[#D97A88] to-[#E88C9A] text-white rounded-tr-none border border-rose-100'
+                : 'bg-[#FFF8F6] border border-rose-50 text-[#4A4A4A] rounded-tl-none'
+                }`}>
                 {msg.text}
               </div>
             </div>
           ))}
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-white border border-slate-100 p-4 rounded-2xl text-slate-400 text-sm flex items-center gap-2 shadow-sm">
-                <span className="flex gap-1">
-                  <span className="w-2 h-2 bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-2 h-2 bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-2 h-2 bg-teal-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              <div className="bg-[#FFF8F6] border border-rose-50 px-5 py-4 rounded-2xl rounded-tl-none text-[#E88C9A] text-sm font-bold flex items-center gap-3 shadow-sm">
+                <span className="flex gap-1.5">
+                  <span className="w-2.5 h-2.5 bg-[#E88C9A] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-2.5 h-2.5 bg-[#E88C9A] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-2.5 h-2.5 bg-[#E88C9A] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                 </span>
-                Thinking...
+                Processing AI Matrix...
               </div>
             </div>
           )}
-          <div ref={chatEndRef} />
+          <div ref={chatEndRef} className="h-4" />
         </div>
 
-        {/* Input */}
-        <form onSubmit={handleSend} className="p-4 bg-white border-t border-slate-100 flex gap-3">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask me anything about PCOS care..."
-            className="flex-1 p-4 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent text-sm text-slate-800 transition-all"
-          />
-          <button type="submit" disabled={loading}
-            className="bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-6 py-4 rounded-xl font-bold shadow-md hover:from-violet-700 hover:to-fuchsia-700 transition-all duration-300 disabled:opacity-50 active:scale-95">
-            Send
-          </button>
-        </form>
+        {/* Input Field */}
+        <div className="p-4 bg-white border-t border-rose-50 flex-shrink-0">
+          <form onSubmit={handleSend} className="relative flex items-center w-full bg-[#FFF8F6] border border-rose-100 rounded-2xl shadow-sm focus-within:ring-2 focus-within:ring-[#E88C9A]/30 focus-within:border-[#E88C9A] transition-all">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Query clinical data or request protocol adjustments..."
+              className="flex-1 px-6 py-5 bg-transparent focus:outline-none text-[#5C3A4D] placeholder-[#5C3A4D]/40 font-bold"
+            />
+            <div className="pr-3">
+              <button type="submit" disabled={loading}
+                className="bg-[#E88C9A] text-white p-3.5 rounded-xl font-bold hover:bg-[#D97A88] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-sm">
+                <svg className="w-5 h-5 translate-x-[1px]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              </button>
+            </div>
+          </form>
+          <div className="text-center mt-3">
+            <span className="text-[10px] uppercase tracking-widest text-[#E88C9A] font-bold">Secure AI Connection Established</span>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

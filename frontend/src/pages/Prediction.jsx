@@ -29,110 +29,98 @@ const Prediction = () => {
   }, []);
 
   if (loading) return (
-    <div className="min-h-screen aurora-bg flex items-center justify-center">
-      <div className="text-center animate-scale-in">
-        <div className="w-20 h-20 border-4 border-violet-200 border-t-teal-600 rounded-full animate-spin mx-auto mb-6 shadow-lg" />
-        <p className="text-xl font-bold text-slate-700">Analyzing your health profile...</p>
-        <p className="text-sm text-slate-400 mt-2">AI is processing your data</p>
+    <div className="min-h-screen bg-[#FFF8F6] flex items-center justify-center font-sans">
+      <div className="text-center animate-pulse-soft">
+        <div className="w-24 h-24 border-4 border-rose-50 border-t-[#E88C9A] rounded-full animate-spin mx-auto mb-8 shadow-sm" />
+        <p className="text-2xl font-black text-[#5C3A4D] tracking-tight">Compiling Medical Data...</p>
+        <p className="text-[#4A4A4A] mt-3 font-medium">Synthesizing clinical insights for your dashboard</p>
       </div>
     </div>
   );
 
   if (!report) return (
-    <div className="min-h-screen aurora-bg flex items-center justify-center">
-      <div className="glass-card text-center p-14 rounded-3xl shadow-2xl animate-scale-in">
-        <p className="text-6xl mb-4">📋</p>
-        <p className="text-xl font-bold text-slate-700">No report found</p>
-        <p className="text-slate-500 mt-2 mb-6">Complete your assessment first</p>
+    <div className="min-h-screen bg-[#FFF8F6] flex items-center justify-center font-sans">
+      <div className="bg-white border border-rose-50 text-center p-14 rounded-[3xl] shadow-[0_8px_30px_rgb(0,0,0,0.04)] w-full max-w-lg mx-6 animate-scale-in">
+        <div className="w-20 h-20 bg-[#FFF8F6] rounded-2xl flex items-center justify-center text-4xl mx-auto mb-6 border border-rose-100 text-[#E88C9A] shadow-sm">📋</div>
+        <h2 className="text-2xl font-black text-[#5C3A4D] mb-2">No Report Found</h2>
+        <p className="text-[#4A4A4A] mb-8 font-medium">Please complete your health assessment to generate an AI evaluation.</p>
         <button onClick={() => navigate('/questionnaire')}
-          className="bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-8 py-3 rounded-2xl font-bold hover:shadow-lg transition-all glow-btn">
-          Take Assessment →
+          className="w-full bg-[#E88C9A] text-white px-8 py-4 rounded-2xl font-bold hover:bg-[#D97A88] transition-colors shadow-sm">
+          Take Assessment
         </button>
       </div>
     </div>
   );
 
   const riskConfig = {
-    'Low':    { grad: 'from-green-500 to-emerald-500', bg: 'bg-green-50', text: 'text-green-700', badge: 'bg-green-100 text-green-700', icon: '🟢', glow: 'shadow-green-200' },
-    'Medium': { grad: 'from-amber-500 to-orange-500',  bg: 'bg-amber-50',  text: 'text-amber-700',  badge: 'bg-amber-100 text-amber-700',  icon: '🟡', glow: 'shadow-amber-200' },
-    'High':   { grad: 'from-red-500 to-rose-500',       bg: 'bg-red-50',    text: 'text-red-700',    badge: 'bg-red-100 text-red-700',       icon: '🔴', glow: 'shadow-red-200' },
+    'Low': { bg: 'bg-[#8FBF9F]/10 border-[#8FBF9F]/20', text: 'text-[#8FBF9F]', badgeInfo: 'bg-[#8FBF9F]/20 text-[#2C4C3B]', icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' },
+    'Medium': { bg: 'bg-amber-50 border-amber-100', text: 'text-amber-700', badgeInfo: 'bg-amber-100 text-amber-800', icon: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' },
+    'High': { bg: 'bg-[#E88C9A]/10 border-[#E88C9A]/20', text: 'text-[#E88C9A]', badgeInfo: 'bg-[#E88C9A]/20 text-[#5C3A4D]', icon: 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
   };
   const risk = riskConfig[report.riskLevel] || riskConfig['Medium'];
 
   return (
-    <div className="min-h-screen aurora-bg py-12 px-6">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-[#FFF8F6] py-16 px-6 font-sans">
+      <div className="max-w-5xl mx-auto space-y-8">
+
         {/* Header */}
-        <div className="text-center mb-12 animate-slide-up">
-          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-5 py-2 rounded-full shadow-sm border border-violet-100 mb-5">
-            <span className="w-2 h-2 bg-violet-500 rounded-full animate-pulse" />
-            <span className="text-sm font-bold text-violet-700 uppercase tracking-wider">🤖 AI Analysis Complete</span>
+        <div className="text-center mb-16 animate-slide-up">
+          <div className="inline-flex items-center gap-2 bg-white text-[#E88C9A] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6 border border-rose-100 shadow-sm">
+            <span className="w-2 h-2 bg-[#E88C9A] rounded-full animate-pulse" /> Final Assessment Validated
           </div>
-          <h1 className="text-5xl font-black text-slate-800">Your PCOS Report</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-[#5C3A4D] tracking-tight">Clinical Report Formulated</h1>
         </div>
 
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
-          {/* Risk Prediction Card */}
-          <div className={`lg:col-span-3 glass-card p-8 rounded-3xl hover:shadow-2xl transition-all duration-300 ${risk.glow} shadow-xl animate-slide-up`}>
-            <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-6">Prediction Result</h2>
-            <div className={`${risk.bg} rounded-2xl p-8 text-center mb-6 border border-opacity-30`}>
-              <span className="text-5xl mb-4 block">{risk.icon}</span>
-              <span className={`px-5 py-2 rounded-full font-bold text-sm inline-block ${risk.badge} mb-4`}>
-                {report.riskLevel} Risk
-              </span>
-              <p className={`text-3xl font-extrabold bg-gradient-to-r ${risk.grad} bg-clip-text text-transparent`}>
-                {report.pcosPrediction}
-              </p>
+        {/* Prediction Main Card */}
+        <div className={`w-full bg-white border border-rose-50 p-8 md:p-12 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] animate-slide-up relative overflow-hidden`}>
+          {/* subtle accent block */}
+          <div className={`absolute top-0 left-0 w-full h-2 ${risk.bg.replace('bg-', 'bg-').split(' ')[0]}`}></div>
+
+          <div className="text-center max-w-2xl mx-auto">
+            <h2 className="text-sm font-bold text-[#E88C9A] uppercase tracking-widest mb-8">PCOS Risk Diagnostic</h2>
+
+            <div className={`inline-flex items-center justify-center p-6 rounded-[2xl] ${risk.bg} border mb-6 shadow-sm`}>
+              <svg className={`w-12 h-12 ${risk.text}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={risk.icon} />
+              </svg>
             </div>
-            <p className="text-slate-400 italic text-center text-sm leading-relaxed">"{report.personalizedMessage}"</p>
-          </div>
 
-          {/* Metric Cards — BUG FIX: parse scores correctly */}
-          <div className="lg:col-span-2 grid grid-cols-2 gap-4">
-            {[
-              { label: 'BMI Index', value: report.BMI, icon: '⚖️', grad: 'from-violet-500 to-fuchsia-500', unit: '' },
-              { label: 'Symptom Score', value: parseScore(report.symptomScore), icon: '📋', grad: 'from-purple-500 to-indigo-500', unit: '/10' },
-              { label: 'Lifestyle Score', value: parseScore(report.lifestyleScore), icon: '🏃', grad: 'from-amber-500 to-orange-500', unit: '/10' },
-              { label: 'Cycle Status', value: report.menstrualIrregularity, icon: '📅', grad: 'from-pink-500 to-rose-500', unit: '' },
-            ].map(stat => (
-              <div key={stat.label}
-                className="glass-card p-5 rounded-2xl flex flex-col items-center justify-center text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className={`w-12 h-12 bg-gradient-to-br ${stat.grad} rounded-xl flex items-center justify-center text-xl shadow-md mb-3`}>
-                  {stat.icon}
-                </div>
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{stat.label}</span>
-                <span className="text-lg font-extrabold text-slate-800 mt-1">{stat.value}{stat.unit}</span>
-              </div>
-            ))}
+            <div className="mb-4">
+              <span className={`px-4 py-1.5 rounded-lg font-bold text-sm tracking-wide ${risk.badgeInfo}`}>
+                {report.riskLevel} RISK CLASSIFICATION
+              </span>
+            </div>
+
+            <p className="text-3xl md:text-4xl font-black text-[#5C3A4D] mb-6 tracking-tight">
+              {report.pcosPrediction}
+            </p>
+
+            <p className="text-[#4A4A4A] text-lg font-medium leading-relaxed bg-[#FFF8F6] p-6 rounded-3xl border border-rose-50 shadow-inner">
+              "{report.personalizedMessage}"
+            </p>
           </div>
         </div>
 
-        {/* Hormone Tips */}
-        <div className="glass-card p-8 rounded-3xl mb-8 hover:shadow-xl transition-all duration-300 animate-slide-up">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center text-xl shadow-md">💡</div>
-            <h2 className="text-xl font-bold text-slate-800">Hormone Balancing Tips</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {report.hormoneBalanceTips?.map((tip, idx) => (
-              <div key={idx} className="flex items-start gap-3 bg-gradient-to-r from-teal-50 to-emerald-50 p-4 rounded-2xl border border-violet-100">
-                <span className="w-6 h-6 bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 shadow-sm">{idx + 1}</span>
-                <span className="text-slate-700 text-sm leading-relaxed">{tip}</span>
-              </div>
-            ))}
-          </div>
+        {/* Key Metrics Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+          {[
+            { label: 'BMI Index', value: report.BMI, unit: '' },
+            { label: 'Symptom Score', value: parseScore(report.symptomScore), unit: '/10' },
+            { label: 'Lifestyle Score', value: parseScore(report.lifestyleScore), unit: '/10' },
+            { label: 'Irregularity', value: report.menstrualIrregularity, unit: '' },
+          ].map(stat => (
+            <div key={stat.label} className="bg-white border border-rose-50 p-6 rounded-3xl flex flex-col items-center text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+              <span className="text-xs font-bold text-[#5C3A4D]/60 uppercase tracking-wider mb-2">{stat.label}</span>
+              <span className="text-2xl font-black text-[#5C3A4D]">{stat.value}{stat.unit}</span>
+            </div>
+          ))}
         </div>
 
-        {/* CTA */}
-        <div className="flex flex-wrap justify-center gap-4">
+        {/* Action Bottom */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4 pt-12 animate-slide-up" style={{ animationDelay: '0.2s' }}>
           <button onClick={() => navigate('/dashboard')}
-            className="bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-14 py-5 rounded-2xl text-xl font-bold shadow-xl hover:shadow-2xl hover:from-violet-700 hover:to-fuchsia-700 transition-all duration-300 active:scale-95 glow-btn">
-            Go to Dashboard →
-          </button>
-          <button onClick={() => navigate('/questionnaire')}
-            className="bg-white text-violet-700 border-2 border-violet-200 px-8 py-5 rounded-2xl text-base font-bold shadow hover:shadow-lg hover:border-violet-400 hover:bg-violet-50 transition-all duration-300 active:scale-95 flex items-center gap-2">
-            🔄 Re-Take Assessment
+            className="px-10 py-4 bg-[#E88C9A] hover:bg-[#D97A88] text-white rounded-2xl font-bold shadow-sm transition-all text-lg">
+            Initialize Dashboard Portal
           </button>
         </div>
       </div>

@@ -1,16 +1,13 @@
 ﻿import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import ProfileDropdown from '../components/ProfileDropdown';
 
-// ✅ BUG FIX: Removed duplicate <FloatingChatbot /> from here.
-// FloatingChatbot is already rendered in App.jsx for all logged-in users.
-
 const DashboardLayout = ({ onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem('user'));
 
   const modules = [
-    { title: 'Dashboard', icon: '📊', route: '/dashboard' },
+    { title: 'Overview', icon: '📊', route: '/dashboard' },
     { title: 'Diet Plan', icon: '🥗', route: '/dashboard/diet' },
     { title: 'Exercise Plan', icon: '🧘', route: '/dashboard/exercise' },
     { title: 'Stress Management', icon: '🍃', route: '/dashboard/stress' },
@@ -24,75 +21,75 @@ const DashboardLayout = ({ onLogout }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-[#FFF8F6] flex font-sans">
       {/* Sidebar */}
-      <aside className="w-64 hidden md:flex flex-col fixed min-h-screen shadow-xl border-r border-white/10"
-        style={{ background: 'linear-gradient(180deg, #5b21b6 0%, #7c3aed 45%, #db2777 100%)' }}>
+      <aside className="w-64 hidden md:flex flex-col fixed min-h-screen bg-[#FFF8F6] border-r border-rose-100 z-40">
         {/* Logo */}
-        <div className="p-6 border-b border-white/10">
+        <div className="p-6 border-b border-rose-100">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-sm">
+            <div className="w-10 h-10 bg-[#E88C9A] rounded-2xl flex items-center justify-center shadow-sm">
               <span className="text-white font-black text-lg">S</span>
             </div>
             <div>
-              <h2 className="text-lg font-extrabold text-white">SyncHer</h2>
-              <p className="text-xs text-violet-300 font-medium">Smart PCOS Care</p>
+              <h2 className="text-xl font-extrabold text-[#5C3A4D] tracking-tight">Saheli</h2>
+              <p className="text-xs text-[#8FBF9F] font-bold uppercase tracking-wider">PCOS Care</p>
             </div>
           </div>
         </div>
 
         {/* User pill */}
-        <div className="px-4 py-3 mx-3 mt-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10">
-          <p className="text-xs text-violet-300 font-semibold">Logged in as</p>
-          <p className="text-sm text-white font-bold truncate">{user?.email || 'User'}</p>
+        <div className="px-5 py-4 mx-4 mt-6 rounded-2xl bg-white border border-rose-50 shadow-sm">
+          <p className="text-xs text-[#E88C9A] font-bold uppercase tracking-wider mb-1">Authenticated</p>
+          <p className="text-sm text-[#5C3A4D] font-bold truncate">{user?.email || 'User'}</p>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 p-3 mt-4 space-y-1 overflow-y-auto">
-          <p className="text-xs font-bold text-violet-400 uppercase tracking-wider px-4 mb-3">Navigation</p>
+        <nav className="flex-1 p-4 mt-2 space-y-2 overflow-y-auto custom-scrollbar">
+          <p className="text-xs font-bold text-[#8FBF9F] uppercase tracking-widest px-3 mb-4 mt-4">Modules</p>
           {modules.map(mod => (
             <button
               key={mod.title}
               onClick={() => navigate(mod.route)}
-              className={`w-full text-left px-4 py-3 rounded-2xl transition-all duration-200 flex items-center gap-3 text-sm font-semibold ${
-                isActive(mod.route)
-                  ? 'bg-white text-violet-700 shadow-lg shadow-black/10'
-                  : 'text-violet-100 hover:bg-white/10 hover:text-white'
-              }`}>
-              <span className="text-base">{mod.icon}</span>
+              className={`w-full text-left px-4 py-3.5 rounded-2xl transition-all duration-300 flex items-center gap-3 text-sm font-semibold select-none ${isActive(mod.route)
+                ? 'bg-[#C8B6E2] text-[#5C3A4D] shadow-sm'
+                : 'text-[#4A4A4A] hover:bg-white hover:text-[#5C3A4D] hover:shadow-sm border border-transparent hover:border-rose-50'
+                }`}>
+              <span className={`text-xl ${isActive(mod.route) ? 'opacity-100 scale-110 transition-transform' : 'opacity-70'}`}>{mod.icon}</span>
               {mod.title}
-              {isActive(mod.route) && <span className="ml-auto w-2 h-2 bg-violet-500 rounded-full" />}
             </button>
           ))}
         </nav>
 
         {/* Logout */}
-        <div className="p-3 border-t border-white/10">
+        <div className="p-4 border-t border-rose-100">
           <button onClick={onLogout}
-            className="w-full p-3 text-red-300 font-semibold hover:bg-red-500/20 rounded-2xl transition-all text-sm flex items-center gap-2 hover:text-red-200">
-            🚪 Logout
+            className="w-full px-4 py-3 text-rose-500 font-semibold bg-white border border-rose-100 hover:bg-rose-50 hover:text-rose-600 rounded-2xl transition-all text-sm flex items-center gap-2 select-none shadow-sm pb-3">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Sign Out Securely
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 md:ml-64 min-h-screen">
+      <main className="flex-1 md:ml-64 min-h-screen flex flex-col relative w-full overflow-x-hidden">
         {/* Top Header */}
-        <header className="sticky top-0 z-30 flex justify-between items-center p-4 md:p-5 bg-white/80 backdrop-blur-xl border-b border-slate-100 shadow-sm">
+        <header className="sticky top-0 z-30 flex justify-between items-center px-6 py-4 md:px-10 md:py-6 bg-[#FFF8F6]/80 backdrop-blur-md border-b border-rose-100">
           <div>
-            <h1 className="text-lg font-extrabold text-slate-800">SyncHer Dashboard</h1>
-            <p className="text-xs text-slate-400 font-medium">Your personal PCOS care center</p>
+            <h1 className="text-2xl font-extrabold text-[#5C3A4D] tracking-tight">My Path</h1>
+            <p className="text-sm text-[#4A4A4A] mt-1 font-medium">Your personalized clinical protocol</p>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100">
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-sm text-slate-500 font-medium">{user?.email}</span>
+          <div className="flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-2 bg-white px-4 py-2 rounded-2xl border border-rose-50 shadow-sm">
+              <span className="w-2.5 h-2.5 bg-[#8FBF9F] rounded-full animate-pulse" />
+              <span className="text-sm text-[#8FBF9F] font-bold select-none uppercase tracking-wider">Care Active</span>
             </div>
             <ProfileDropdown onLogout={onLogout} />
           </div>
         </header>
 
-        <div className="p-5 md:p-8">
+        <div className="p-6 md:p-10 flex-1 w-full max-w-7xl mx-auto">
           <Outlet />
         </div>
       </main>

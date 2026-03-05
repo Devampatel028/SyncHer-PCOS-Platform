@@ -5,46 +5,51 @@ import { apiCall } from '../services/api';
 const Dashboard = () => {
   const navigate = useNavigate();
   const [report, setReport] = useState(null);
+  const [profile, setProfile] = useState(null);
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
-    const fetchReport = async () => {
+    const fetchData = async () => {
       try {
-        const data = await apiCall('/ai-report/latest', 'GET');
-        setReport(data);
+        const [reportData, profileData] = await Promise.all([
+          apiCall('/ai-report/latest', 'GET').catch(() => null),
+          apiCall('/user/profile', 'GET').catch(() => null)
+        ]);
+        if (reportData) setReport(reportData);
+        if (profileData) setProfile(profileData);
       } catch (err) {
         console.error(err);
       }
     };
-    fetchReport();
+    fetchData();
   }, []);
 
   const modules = [
-    { title: 'Diet Plan', icon: '🥗', route: '/dashboard/diet', desc: 'Personalized meal advice', color: 'from-green-500 to-emerald-500', bg: 'bg-green-50' },
-    { title: 'Exercise Plan', icon: '🧘', route: '/dashboard/exercise', desc: 'Custom workout routines', color: 'from-blue-500 to-indigo-500', bg: 'bg-blue-50' },
-    { title: 'Stress Management', icon: '🍃', route: '/dashboard/stress', desc: 'Mental wellness & calm', color: 'from-purple-500 to-violet-500', bg: 'bg-purple-50' },
-    { title: 'Skin & Hair Care', icon: '✨', route: '/dashboard/skin-hair', desc: 'PCOS-specific routines', color: 'from-pink-500 to-rose-500', bg: 'bg-pink-50' },
-    { title: 'AI Assistant', icon: '🤖', route: '/dashboard/assistant', desc: 'Instant AI chat support', color: 'from-amber-500 to-orange-500', bg: 'bg-amber-50' },
+    { title: 'Diet Plan', icon: '🥗', route: '/dashboard/diet', desc: 'Personalized meal & nutrition advice', color: 'emerald', border: 'border-emerald-200', text: 'text-emerald-700', bg: 'bg-emerald-50' },
+    { title: 'Exercise Plan', icon: '🧘', route: '/dashboard/exercise', desc: 'Custom workout routines & mobility', color: 'indigo', border: 'border-indigo-200', text: 'text-indigo-700', bg: 'bg-indigo-50' },
+    { title: 'Stress Management', icon: '🍃', route: '/dashboard/stress', desc: 'Mental wellness & calm routines', color: 'violet', border: 'border-violet-200', text: 'text-violet-700', bg: 'bg-violet-50' },
+    { title: 'Skin & Hair Care', icon: '✨', route: '/dashboard/skin-hair', desc: 'PCOS-specific dermatological routines', color: 'pink', border: 'border-pink-200', text: 'text-pink-700', bg: 'bg-pink-50' },
+    { title: 'AI Assistant', icon: '🤖', route: '/dashboard/assistant', desc: 'Instant 24/7 AI chat support', color: 'amber', border: 'border-amber-200', text: 'text-amber-700', bg: 'bg-amber-50' },
   ];
 
 
   return (
-    <>
-      {/* Welcome Banner — Aurora gradient */}
-      <div className="relative overflow-hidden rounded-3xl p-8 mb-8 text-white shadow-2xl"
-        style={{ background: 'linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #db2777 100%)' }}>
-        <div className="absolute inset-0 opacity-20"
-          style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, white 0%, transparent 60%), radial-gradient(circle at 80% 20%, white 0%, transparent 50%)' }} />
-        <div className="orb w-64 h-64 bg-white/10 -top-10 -right-10" style={{ animationDelay: '0s', filter: 'blur(40px)' }} />
+    <div className="space-y-8 animate-fade-in font-sans">
+
+      {/* Welcome Banner — Solid Premium SaaS aesthetic */}
+      <div className="relative overflow-hidden rounded-3xl p-8 md:p-10 bg-gradient-to-br from-[#E88C9A] to-[#D97A88] border border-rose-100 shadow-[0_8px_30px_rgb(232,140,154,0.2)] text-white">
+        <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
+          <svg className="w-64 h-64 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13.5h-13L12 6.5z" /></svg>
+        </div>
         <div className="relative z-10">
-          <p className="text-violet-100 text-sm font-semibold mb-1 tracking-wide uppercase">Welcome back</p>
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-4">
-            {user?.name || user?.email?.split('@')[0] || 'User'} 👋
+          <p className="text-rose-100 text-sm font-bold mb-2 tracking-widest uppercase">Overview</p>
+          <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight drop-shadow-sm">
+            Hi, {user?.name || user?.email?.split('@')[0] || 'User'}
           </h2>
           <div className="flex flex-wrap items-center gap-3">
             {report && (
-              <span className="px-4 py-1.5 rounded-full text-xs font-bold bg-white/20 text-white backdrop-blur-sm border border-white/30">
-                Risk: {report.riskLevel}
+              <span className="px-4 py-2 rounded-xl text-xs font-bold bg-white/20 backdrop-blur-md text-white border border-rose-100/50 tracking-wide uppercase shadow-sm">
+                Overall Risk Class: {report.riskLevel}
               </span>
             )}
           </div>
@@ -53,114 +58,176 @@ const Dashboard = () => {
 
       {/* Health Metrics */}
       {report ? (
-        <div className="mb-10">
+        <div className="space-y-6">
           {/* Detect stale/empty report — show re-assess nudge */}
           {(!report.BMI || report.BMI === 0 || !report.riskLevel || report.riskLevel === 'Unknown') ? (
-            <div className="glass-card p-6 rounded-2xl border border-amber-200 bg-amber-50 mb-4 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-xl flex-shrink-0">⚠️</div>
+            <div className="bg-amber-50 rounded-3xl border border-amber-200 p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-amber-100 text-amber-600 shadow-sm">⚠️</div>
                 <div>
-                  <p className="text-sm font-bold text-amber-800">Your health data needs a refresh</p>
-                  <p className="text-xs text-amber-600">Your previous report is incomplete. Re-take the assessment to get full AI recommendations.</p>
+                  <h3 className="text-lg font-bold text-amber-900 mb-1">Clinical Profile Incomplete</h3>
+                  <p className="text-sm font-medium text-amber-700">Your previous report lacks critical data points. Please re-take the assessment for an accurate protocol.</p>
                 </div>
               </div>
               <button onClick={() => navigate('/questionnaire')}
-                className="flex-shrink-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:from-amber-600 hover:to-orange-600 hover:shadow-lg transition-all active:scale-95">
-                Re-Assess →
+                className="flex-shrink-0 bg-amber-500 text-white px-6 py-3 rounded-2xl text-sm font-bold hover:bg-amber-600 transition-colors shadow-sm w-full md:w-auto text-center">
+                Initialize Assessment
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-4">
-              {/* BMI card — shows number + category label */}
-              <div className="glass-card p-6 rounded-2xl border-l-4 border-violet-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-11 h-11 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center text-lg shadow-md">⚖️</div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">BMI Index</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+              {/* BMI card */}
+              <div className="bg-white p-6 rounded-3xl border border-rose-50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-[#FFF8F6] rounded-xl flex items-center justify-center text-lg border border-rose-100/50 shadow-sm text-slate-600">⚖️</div>
+                  <p className="text-xs font-bold text-[#5C3A4D]/60 uppercase tracking-widest">BMI Metric</p>
                 </div>
-                <h3 className="text-2xl font-extrabold text-slate-800">{report.BMI || 'N/A'}</h3>
-                {report.bmiCategory && (
-                  <p className="text-xs text-violet-600 font-semibold mt-1 leading-tight">{report.bmiCategory.split(' (')[0]}</p>
-                )}
+                <div className="mt-auto">
+                  <h3 className="text-3xl font-black text-[#5C3A4D] mb-1">{report.BMI || 'N/A'}</h3>
+                  {report.bmiCategory && (
+                    <p className="text-xs text-[#E88C9A] font-bold uppercase tracking-wide">{report.bmiCategory.split(' (')[0]}</p>
+                  )}
+                </div>
               </div>
+
               {/* Risk Level card */}
-              <div className="glass-card p-6 rounded-2xl border-l-4 border-orange-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-11 h-11 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center text-lg shadow-md">🎯</div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Risk Level</p>
+              <div className="bg-white p-6 rounded-3xl border border-rose-50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-[#FFF8F6] rounded-xl flex items-center justify-center text-lg border border-rose-100/50 shadow-sm text-slate-600">🎯</div>
+                  <p className="text-xs font-bold text-[#5C3A4D]/60 uppercase tracking-widest">Base Risk</p>
                 </div>
-                <h3 className="text-2xl font-extrabold text-slate-800">{report.riskLevel || 'N/A'}</h3>
+                <div className="mt-auto">
+                  <h3 className="text-3xl font-black text-[#5C3A4D] mb-1">{report.riskLevel || 'N/A'}</h3>
+                  <p className="text-xs text-[#4A4A4A] font-bold">{report.combinedRiskLevel !== 'Not evaluated yet' ? `Refined: ${report.combinedRiskLevel}` : 'Standard diagnostic'}</p>
+                </div>
               </div>
-              {/* Cycle Status card */}
-              <div className="glass-card p-6 rounded-2xl border-l-4 border-purple-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-11 h-11 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex items-center justify-center text-lg shadow-md">📅</div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Cycle Status</p>
+
+              {/* Severity card */}
+              <div className="bg-white p-6 rounded-3xl border border-rose-50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-[#FFF8F6] rounded-xl flex items-center justify-center text-lg border border-rose-100/50 shadow-sm text-slate-600">⚡</div>
+                  <p className="text-xs font-bold text-[#5C3A4D]/60 uppercase tracking-widest">Severity</p>
                 </div>
-                <h3 className="text-2xl font-extrabold text-slate-800">{report.menstrualIrregularity || 'N/A'}</h3>
+                <div className="mt-auto">
+                  <h3 className="text-3xl font-black text-[#5C3A4D] mb-1">{report.symptomScore ? `${report.symptomScore}/10` : 'N/A'}</h3>
+                  <p className="text-xs text-[#4A4A4A] font-bold">{report.refinedSeverityLevel !== 'Not evaluated yet' ? `Level: ${report.refinedSeverityLevel}` : 'Standard diagnostic'}</p>
+                </div>
+              </div>
+
+              {/* Cycle card */}
+              <div className="bg-white p-6 rounded-3xl border border-rose-50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-[#FFF8F6] rounded-xl flex items-center justify-center text-lg border border-rose-100/50 shadow-sm text-slate-600">📅</div>
+                  <p className="text-xs font-bold text-[#5C3A4D]/60 uppercase tracking-widest">Cycle State</p>
+                </div>
+                <div className="mt-auto">
+                  <h3 className="text-xl font-black text-[#5C3A4D] leading-tight block">{report.menstrualIrregularity || 'N/A'}</h3>
+                </div>
               </div>
             </div>
           )}
-          {/* Re-Assessment CTA */}
-          <div className="glass-card p-5 rounded-2xl flex items-center justify-between border border-violet-100">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center text-lg">🔄</div>
-              <div>
-                <p className="text-sm font-bold text-slate-700">Update your health profile</p>
-                <p className="text-xs text-slate-400">Re-take the assessment to refresh your AI recommendations</p>
-              </div>
-            </div>
-            <button onClick={() => navigate('/questionnaire')}
-              className="flex-shrink-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:from-violet-700 hover:to-fuchsia-700 hover:shadow-lg transition-all active:scale-95">
-              Re-Assess →
+
+          {/* Re-Assessment CTA (Smaller Footer Line) */}
+          <div className="flex items-center justify-between mt-4">
+            <p className="text-xs text-[#4A4A4A] font-bold">To maintain accurate AI predictions, we recommend updating your clinical profile regularly.</p>
+            <button onClick={() => navigate('/questionnaire')} className="text-sm font-bold text-[#E88C9A] hover:text-[#D97A88] transition-colors bg-[#FFF8F6] px-4 py-2 rounded-xl border border-rose-100 shadow-sm">
+              Launch Diagnostic
             </button>
           </div>
         </div>
       ) : (
-        <div className="glass-card p-10 rounded-3xl text-center mb-10">
-          <p className="text-5xl mb-4">📋</p>
-          <p className="text-slate-600 font-semibold mb-1">No health report yet</p>
-          <p className="text-slate-400 text-sm mb-5">Complete your assessment to see your personalized stats</p>
+        <div className="bg-white border border-rose-50 p-12 rounded-[3xl] text-center mb-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+          <div className="w-20 h-20 bg-[#FFF8F6] border border-rose-100 rounded-2xl flex items-center justify-center text-4xl mx-auto mb-6 text-rose-300 shadow-sm">📋</div>
+          <h3 className="text-xl font-bold text-[#5C3A4D] mb-2">Diagnostic Data Required</h3>
+          <p className="text-[#4A4A4A] text-sm mb-8 font-medium max-w-sm mx-auto">Initialize your medical profile to generate personalized insights.</p>
           <button onClick={() => navigate('/questionnaire')}
-            className="bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white px-8 py-3 rounded-2xl font-bold hover:from-violet-700 hover:to-fuchsia-700 hover:shadow-lg transition-all glow-btn">
-            Start Assessment →
+            className="bg-[#E88C9A] text-white px-8 py-4 rounded-2xl font-bold hover:bg-[#D97A88] transition-colors shadow-sm">
+            Start Clinical Assessment
           </button>
         </div>
       )}
 
-      {/* Care Modules */}
-      <h2 className="text-2xl font-extrabold text-slate-800 mb-6">Your Care Modules</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
-        {modules.map((mod, i) => (
-          <div key={mod.title} onClick={() => navigate(mod.route)}
-            className="glass-card p-7 rounded-3xl hover:shadow-2xl transition-all duration-300 cursor-pointer group hover:-translate-y-2"
-            style={{ animationDelay: `${i * 0.1}s` }}>
-            <div className={`w-14 h-14 bg-gradient-to-br ${mod.color} rounded-2xl flex items-center justify-center text-2xl shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
-              {mod.icon}
+      {/* Hormonal Health */}
+      <div className="pt-6">
+        <h2 className="text-xl font-extrabold text-[#5C3A4D] mb-6 tracking-tight">Hormonal Index</h2>
+        {
+          !profile?.hormonalIndex || profile.hormonalIndex.totalScore === null ? (
+            <div className="bg-[#FFF8F6] p-6 rounded-3xl border border-dashed border-rose-200">
+              <p className="text-[#4A4A4A] font-bold text-sm text-center">Data point unavailable. Complete assessment.</p>
             </div>
-            <h3 className="text-lg font-bold text-slate-800 mb-1">{mod.title}</h3>
-            <p className="text-slate-400 text-sm">{mod.desc}</p>
-            <div className="mt-4 flex items-center gap-1 text-xs font-bold text-violet-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              Open <span>→</span>
+          ) : (
+            <div className="bg-white p-6 md:p-8 rounded-3xl border border-rose-50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] max-w-2xl">
+              <div className="flex justify-between items-end mb-6">
+                <div>
+                  <h3 className="text-xs font-bold text-[#5C3A4D]/60 uppercase tracking-widest mb-1">Index Score</h3>
+                  <p className={`text-xs font-bold px-3 py-1.5 rounded-xl inline-block uppercase tracking-wide border shadow-sm ${profile.hormonalIndex.totalScore <= 25 ? 'bg-[#8FBF9F]/10 text-[#8FBF9F] border-[#8FBF9F]/30' :
+                    profile.hormonalIndex.totalScore <= 50 ? 'bg-[#C8B6E2]/10 text-[#5C3A4D] border-[#C8B6E2]/30' :
+                      profile.hormonalIndex.totalScore <= 75 ? 'bg-orange-50 text-orange-700 border-orange-200' :
+                        'bg-[#E88C9A]/10 text-[#E88C9A] border-[#E88C9A]/30'
+                    }`}>{profile.hormonalIndex.category}</p>
+                </div>
+                <div className="text-right">
+                  <span className="text-5xl font-black text-[#5C3A4D] tracking-tighter">{profile.hormonalIndex.totalScore}</span>
+                  <span className="text-xl font-bold text-[#E88C9A]/60">/100</span>
+                </div>
+              </div>
+              <div className="w-full h-3 bg-rose-50 rounded-full overflow-hidden shadow-inner">
+                <div
+                  className={`h-full rounded-full transition-all duration-1000 ${profile.hormonalIndex.totalScore <= 25 ? 'bg-[#8FBF9F]' :
+                    profile.hormonalIndex.totalScore <= 50 ? 'bg-[#C8B6E2]' :
+                      profile.hormonalIndex.totalScore <= 75 ? 'bg-orange-400' : 'bg-[#E88C9A]'
+                    }`}
+                  style={{ width: `${profile.hormonalIndex.totalScore}%` }}
+                />
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        }
       </div>
 
-      {/* AI Insight Banner */}
-      {report && (
-        <div className="relative overflow-hidden rounded-3xl p-8 shadow-xl text-white"
-          style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%)' }}>
-          <div className="orb w-48 h-48 bg-purple-400/20 bottom-0 right-0" style={{ filter: 'blur(40px)' }} />
-          <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl">💡</div>
-              <h3 className="text-xl font-bold">Today's AI Insight</h3>
+      {/* Modules Grid */}
+      <div className="pt-6">
+        <h2 className="text-xl font-extrabold text-[#5C3A4D] mb-6 tracking-tight">Prescribed Protocol</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {modules.map((mod, i) => (
+            <div key={mod.title} onClick={() => navigate(mod.route)}
+              className="bg-white p-6 rounded-3xl border border-rose-50 hover:border-rose-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-md transition-all duration-300 cursor-pointer group flex flex-col"
+            >
+              <div className={`w-12 h-12 bg-white shadow-sm border ${mod.border} rounded-2xl flex items-center justify-center text-xl mb-5 group-hover:scale-105 transition-transform`}>
+                <span className={mod.text}>{mod.icon}</span>
+              </div>
+              <h3 className="text-lg font-black text-[#5C3A4D] mb-2">{mod.title}</h3>
+              <p className="text-[#4A4A4A] text-sm leading-relaxed font-medium flex-grow">{mod.desc}</p>
+              <div className="mt-6 flex items-center gap-2 text-sm font-bold text-[#E88C9A] opacity-0 group-hover:opacity-100 transition-opacity">
+                Access Module
+                <svg className="w-4 h-4 translate-y-[1px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </div>
             </div>
-            <p className="max-w-3xl italic opacity-90 leading-relaxed text-purple-100">"{report.personalizedMessage}"</p>
+          ))}
+        </div>
+      </div>
+
+      {/* AI Insight */}
+      {report && (
+        <div className="pt-6 pb-12">
+          <div className="bg-gradient-to-r from-[#C8B6E2]/20 to-[#E88C9A]/10 p-8 rounded-3xl border border-rose-100 text-[#5C3A4D] relative overflow-hidden flex flex-col md:flex-row items-center gap-8 shadow-sm">
+            <div className="absolute -right-6 -bottom-6 opacity-10 pointer-events-none text-[#C8B6E2]">
+              <svg className="w-48 h-48" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" /></svg>
+            </div>
+
+            <div className="w-16 h-16 rounded-2xl bg-white border border-rose-100 shadow-sm flex items-center justify-center text-2xl flex-shrink-0 z-10">
+              💡
+            </div>
+            <div className="z-10 flex-1">
+              <h3 className="text-xs font-bold text-[#E88C9A] uppercase tracking-widest mb-2">AI Clinical Insight</h3>
+              <p className="text-lg md:text-xl font-bold text-[#5C3A4D] leading-relaxed italic drop-shadow-sm">
+                "{report.personalizedMessage}"
+              </p>
+            </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

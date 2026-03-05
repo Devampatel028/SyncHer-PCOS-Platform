@@ -20,10 +20,10 @@ const StressManagement = () => {
   }, []);
 
   if (loading) return (
-    <div className="flex flex-col gap-6 animate-pulse">
-      <div className="h-32 bg-slate-100 rounded-2xl" />
-      <div className="grid grid-cols-2 gap-4">
-        {[...Array(6)].map((_, i) => <div key={i} className="h-32 bg-slate-100 rounded-2xl" />)}
+    <div className="flex flex-col gap-6 animate-pulse p-4">
+      <div className="h-24 bg-slate-200 rounded-2xl" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {[...Array(4)].map((_, i) => <div key={i} className="h-32 bg-slate-200 rounded-2xl" />)}
       </div>
     </div>
   );
@@ -31,64 +31,72 @@ const StressManagement = () => {
   const stress = report?.stressModule || report?.stressPlan;
 
   if (!stress) return (
-    <div className="flex flex-col items-center justify-center py-20 text-center">
-      <p className="text-5xl mb-4">🍃</p>
-      <h3 className="text-xl font-bold text-slate-700 mb-2">No Stress Plan Yet</h3>
-      <p className="text-sm text-slate-400">Complete health assessment to receive personalized recommendations.</p>
+    <div className="flex flex-col items-center justify-center py-24 text-center bg-white border border-rose-50 rounded-[3xl] shadow-[0_8px_30px_rgb(0,0,0,0.04)] mt-8">
+      <div className="w-20 h-20 bg-[#FFF8F6] border border-rose-100 rounded-2xl flex items-center justify-center text-4xl mb-6 text-[#8FBF9F] shadow-sm">🍃</div>
+      <h3 className="text-xl font-bold text-[#5C3A4D] mb-2">Diagnostic Data Required</h3>
+      <p className="text-sm text-[#4A4A4A] font-medium max-w-sm">Complete your clinical assessment to generate personalized wellness protocols.</p>
     </div>
   );
 
   return (
-    <>
-      <div className="flex items-center gap-4 mb-8">
-        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-violet-500 rounded-xl flex items-center justify-center text-2xl shadow-md">🍃</div>
+    <div className="space-y-8 animate-fade-in font-sans">
+      {/* Header */}
+      <div className="flex items-center gap-5">
+        <div className="w-14 h-14 bg-white border border-rose-50 rounded-2xl flex items-center justify-center text-2xl text-[#8FBF9F] shadow-sm">🍃</div>
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-800">Stress & Mental Wellness</h1>
-          <p className="text-sm text-slate-400">AI-tailored techniques to calm your mind and heal your body</p>
+          <h1 className="text-3xl font-extrabold text-[#5C3A4D] tracking-tight">Stress & Mental Wellness</h1>
+          <p className="text-sm text-[#4A4A4A] font-bold">AI-tailored techniques mapped to your cortisol and hormonal profile</p>
         </div>
       </div>
 
       {/* Today's Focus */}
-      <div className="bg-gradient-to-r from-purple-600 to-violet-600 rounded-2xl p-6 mb-8 text-white relative overflow-hidden shadow-lg">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="relative z-10">
-          <p className="text-purple-100 text-xs font-bold uppercase tracking-wider mb-2">📌 Today's Focus</p>
-          <p className="text-lg font-bold">{stress.todayFocus}</p>
+      <div className="bg-gradient-to-r from-[#D97A88] to-[#E88C9A] border border-rose-200 rounded-[3xl] p-8 text-white relative flex flex-col md:flex-row items-center justify-between gap-6 shadow-[0_8px_30px_rgb(232,140,154,0.3)]">
+        <div className="relative z-10 flex-1">
+          <p className="text-rose-50 text-xs font-bold uppercase tracking-widest mb-2">📌 Today's Wellness Vector</p>
+          <p className="text-xl md:text-2xl font-black leading-tight drop-shadow-sm">{stress.todayFocus}</p>
+        </div>
+        <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-3xl border border-white/30 shadow-sm flex-shrink-0">
+          🧘‍♀️
         </div>
       </div>
 
       {/* Techniques */}
-      <h3 className="text-lg font-bold text-slate-800 mb-4">Relaxation Techniques</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-        {stress.techniques?.map((t, i) => (
-          <div key={i} className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-            <div className="flex items-start gap-4">
-              <span className="text-3xl flex-shrink-0">{t.icon}</span>
+      <div className="bg-white rounded-[3xl] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-rose-50 p-8">
+        <div className="flex items-center gap-3 mb-6 border-b border-rose-50 pb-4">
+          <div className="w-10 h-10 bg-[#FFF8F6] border border-rose-100 rounded-xl flex items-center justify-center text-lg text-[#E88C9A]">🧠</div>
+          <h3 className="text-xl font-extrabold text-[#5C3A4D] tracking-tight">Neurological Relaxation Protocol</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {stress.techniques?.map((t, i) => (
+            <div key={i} className="flex items-start gap-4 p-5 bg-[#FFF8F6] rounded-3xl border border-rose-50 hover:border-[#E88C9A]/30 transition-colors">
+              <span className="text-3xl bg-white border border-rose-100 p-2 rounded-2xl flex-shrink-0 shadow-sm">{t.icon}</span>
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <h4 className="font-bold text-slate-800">{t.title}</h4>
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${t.tagColor}`}>{t.tag}</span>
+                <div className="flex items-center flex-wrap gap-2 mb-2 w-full">
+                  <h4 className="font-black text-[#5C3A4D] truncate flex-1">{t.title}</h4>
+                  <span className={`px-3 py-1.5 rounded-lg text-[10px] uppercase font-bold tracking-widest bg-white text-[#E88C9A] border border-rose-100 shadow-sm`}>{t.tag}</span>
                 </div>
-                <p className="text-sm text-slate-600 leading-relaxed">{t.desc}</p>
+                <p className="text-sm text-[#4A4A4A] leading-relaxed font-bold">{t.desc}</p>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Weekly Focus */}
       {stress.weeklyFocus?.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 mb-8 hover:shadow-xl transition-all duration-300">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center text-lg">📅</div>
-            <h3 className="text-lg font-bold text-slate-800">Weekly Focus Plan</h3>
+        <div className="bg-white rounded-[3xl] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-rose-50 p-8 mt-6">
+          <div className="flex items-center gap-3 mb-6 border-b border-rose-50 pb-4">
+            <div className="w-10 h-10 bg-[#FFF8F6] border border-rose-100 rounded-xl flex items-center justify-center text-lg text-[#C8B6E2]">📅</div>
+            <h3 className="text-xl font-extrabold text-[#5C3A4D] tracking-tight">Weekly Wellness Matrix</h3>
           </div>
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {stress.weeklyFocus.map((item, i) => (
-              <div key={i} className="flex items-center gap-4 p-3 bg-slate-50 rounded-xl">
-                <span className="text-xl">{item.icon}</span>
-                <span className="text-sm font-bold text-slate-500 w-20">{item.day}</span>
-                <span className="text-sm text-slate-700">{item.focus}</span>
+              <div key={i} className="flex items-center gap-4 p-4 bg-[#FFF8F6] rounded-2xl border border-rose-50">
+                <span className="w-12 h-12 bg-white border border-rose-100 flex items-center justify-center rounded-2xl text-xl shadow-sm flex-shrink-0">{item.icon}</span>
+                <div className="flex-1">
+                  <p className="text-xs font-black text-[#E88C9A] uppercase tracking-widest">{item.day}</p>
+                  <p className="text-sm font-bold text-[#4A4A4A] leading-snug">{item.focus}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -97,15 +105,17 @@ const StressManagement = () => {
 
       {/* AI Insight */}
       {stress.aiInsight && (
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-6 hover:shadow-xl transition-all duration-300">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center text-lg">🤖</div>
-            <h3 className="text-lg font-bold text-slate-800">AI Health Insight</h3>
+        <div className="bg-gradient-to-r from-[#C8B6E2]/20 to-[#E88C9A]/10 border border-rose-100 rounded-[3xl] p-8 text-[#5C3A4D] relative flex flex-col md:flex-row items-center gap-6 shadow-sm mt-6">
+          <div className="w-16 h-16 bg-white border border-rose-100 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 shadow-sm">
+            🤖
           </div>
-          <p className="text-sm text-slate-600 leading-relaxed">{stress.aiInsight}</p>
+          <div className="flex-1">
+            <h3 className="text-xs font-bold text-[#E88C9A] uppercase tracking-widest mb-2">AI Clinical Insight</h3>
+            <p className="text-lg font-bold text-[#5C3A4D] leading-relaxed italic drop-shadow-sm">"{stress.aiInsight}"</p>
+          </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -13,7 +13,9 @@ const healthAssessmentSchema = new mongoose.Schema({
         smoking: String,
         diagnosed: String,
         cycleLength: String,
-        symptoms: [String]
+        symptoms: [String],
+        advancedAnswers: [String],
+        intensityAnswers: [String]
     },
     createdAt: { type: Date, default: Date.now }
 });

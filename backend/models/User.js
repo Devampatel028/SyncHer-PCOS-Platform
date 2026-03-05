@@ -19,6 +19,18 @@ const UserSchema = new mongoose.Schema({
     aiAlerts: { type: Boolean, default: true },
     healthWarnings: { type: Boolean, default: true }
   },
+  hormonalIndex: {
+    answers: [
+      {
+        questionId: Number,
+        selectedOption: String,
+        numericScore: Number
+      }
+    ],
+    totalScore: { type: Number, default: null },
+    category: { type: String, default: null },
+    completedAt: { type: Date, default: null }
+  },
   createdAt: { type: Date, default: Date.now }
 });
 

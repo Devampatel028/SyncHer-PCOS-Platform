@@ -45,14 +45,14 @@ function App() {
           <Route path="/register" element={<Register onLogin={handleLogin} />} />
 
           {/* Protected Routes (pre-dashboard flow) */}
-          <Route path="/awareness" element={user ? <Awareness /> : <Navigate to="/login" />} />
-          <Route path="/questionnaire" element={user ? <Questionnaire /> : <Navigate to="/login" />} />
-          <Route path="/prediction" element={user ? <Prediction /> : <Navigate to="/login" />} />
+          <Route path="/awareness" element={user ? <Awareness /> : <Navigate to="/" />} />
+          <Route path="/questionnaire" element={user ? <Questionnaire /> : <Navigate to="/" />} />
+          <Route path="/prediction" element={user ? <Prediction /> : <Navigate to="/" />} />
 
           {/* Dashboard with persistent layout */}
           <Route
             path="/dashboard"
-            element={user ? <DashboardLayout onLogout={handleLogout} /> : <Navigate to="/login" />}
+            element={user ? <DashboardLayout onLogout={handleLogout} /> : <Navigate to="/" />}
           >
             <Route index element={<DashboardHome />} />
             <Route path="diet" element={<DietPlan />} />

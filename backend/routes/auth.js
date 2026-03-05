@@ -9,11 +9,11 @@ const jwt = require('jsonwebtoken');
 router.post('/register', async (req, res) => {
     console.log("REGISTER REQUEST RECEIVED");
     try {
-        const { email, password } = req.body;
+        const { email, password, name, phone } = req.body;
 
-        if (!email || !password) {
+        if (!email || !password || !name || !phone) {
             return res.status(400).json({
-                message: "Email and password required"
+                message: "Email, password, name, and phone are required"
             });
         }
 
@@ -27,7 +27,11 @@ router.post('/register', async (req, res) => {
 
 user = new User({
     email,
-    password
+    password,
+    name,
+    phone,
+    pcosStatus: "Not assessed",
+    cycleLength: "Unknown"
 });
 
 await user.save();

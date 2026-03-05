@@ -126,4 +126,47 @@ router.put("/change-password", authMiddleware, async (req, res) => {
   }
 });
 
+// =============================================
+// POST /api/user/hormonal-assessment
+// =============================================
+router.post("/hormonal-assessment", authMiddleware, async (req, res) => {
+  try {
+    const { answers } = req.body;
+
+    // Optional lightweight payload validation
+    if (!answers || !Array.isArray(answers)) {
+      return res.status(400).json({ message: "Invalid answers payload." });
+    }
+
+    const totalScore = answers.reduce((sum, ans) => sum + (Number(ans.numericScore) || 0), 0);
+
+    let category = "Stable Hormonal Pattern";
+    if (totalScore >= 76) {
+      category = "Severe Hormonal Disruption";
+    } else if (totalScore >= 51) {
+      category = "Moderate Imbalance";
+    } else if (totalScore >= 26) {
+      category = "Mild Hormonal Imbalance";
+    }
+
+    const newData = {
+      answers,
+      totalScore,
+      category,
+      completedAt: new Date()
+    };
+
+    await User.updateOne(
+      { _id: req.userId },
+      { $set: { hormonalIndex: newData } }
+    );
+
+    res.json({ message: "Hormonal assessment saved", data: newData });
+
+  } catch (error) {
+    console.error("HORMONAL ASSESSMENT ERROR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
