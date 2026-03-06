@@ -1,4 +1,4 @@
-const GEMINI_MODEL = "gemini-3-flash-preview"; // ✅ CONFIRMED WORKING
+const GEMINI_MODEL = "gemini-2.5-flash"; // ✅ CONFIRMED WORKING
 const express = require("express");
 const router = express.Router();
 
@@ -28,6 +28,15 @@ router.post("/submit", authMiddleware, async (req, res) => {
     const assessment = new HealthAssessment({ userId, questionnaireAnswers: req.body });
     await assessment.save();
     console.log("✅ [ASSESSMENT] Saved to DB");
+
+    // ✅ Sync key fields to User model so they're available everywhere
+    await User.findByIdAndUpdate(userId, {
+      age: req.body.age || undefined,
+      weight: req.body.weight || undefined,
+      height: req.body.height || undefined,
+      cycleLength: req.body.cycleLength || undefined,
+      pcosStatus: req.body.diagnosed || undefined
+    });
 
     // ---- CALL GEMINI DIRECTLY ----
     const data = req.body;
@@ -159,13 +168,41 @@ Return ONLY this JSON (all fields required, recommendations must reflect the BMI
     try {
       console.log("✅ [ASSESSMENT] Calling Gemini API...");
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const response = await ai.models.generateContent({
-        model: GEMINI_MODEL,
-        contents: prompt,
-      });
 
-      const text = response.text;
-      console.log("✅ [ASSESSMENT] Gemini raw response (first 300 chars):", text.substring(0, 300));
+      // Retry logic with exponential backoff
+      const MAX_RETRIES = 3;
+      let lastError = null;
+      let text = null;
+
+      for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        try {
+          console.log(`✅ [ASSESSMENT] Gemini attempt ${attempt}/${MAX_RETRIES}...`);
+          const response = await ai.models.generateContent({
+            model: GEMINI_MODEL,
+            contents: prompt,
+          });
+          text = response.text;
+          console.log("✅ [ASSESSMENT] Gemini raw response (first 300 chars):", text.substring(0, 300));
+          lastError = null;
+          break; // success
+        } catch (retryErr) {
+          lastError = retryErr;
+          const isRetryable = retryErr.message?.includes("503") || 
+                              retryErr.message?.includes("429") || 
+                              retryErr.message?.includes("UNAVAILABLE") ||
+                              retryErr.message?.includes("capacity") ||
+                              retryErr.message?.includes("overloaded");
+          if (isRetryable && attempt < MAX_RETRIES) {
+            const waitMs = attempt * 3000; // 3s, 6s, 9s
+            console.log(`⚠️ [ASSESSMENT] Gemini ${retryErr.message?.substring(0, 50)}... retrying in ${waitMs/1000}s`);
+            await new Promise(resolve => setTimeout(resolve, waitMs));
+          } else {
+            throw retryErr; // non-retryable or last attempt
+          }
+        }
+      }
+
+      if (!text) throw lastError || new Error("No response from Gemini");
 
       // Strip markdown code blocks if present
       let jsonStr = text;

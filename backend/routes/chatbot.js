@@ -1,4 +1,4 @@
-const GEMINI_MODEL = "gemini-3-flash-preview"; // ✅ CONFIRMED WORKING
+const GEMINI_MODEL = "gemini-2.5-flash"; // ✅ CONFIRMED WORKING
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/auth");
@@ -21,7 +21,7 @@ router.post("/", authMiddleware, async (req, res) => {
       }
     } catch (e) {}
 
-    const prompt = `You are SyncHer AI, a compassionate PCOS health assistant.
+    const prompt = `You are Saheli AI, a compassionate PCOS health assistant.
 
 Patient context: ${contextText}
 

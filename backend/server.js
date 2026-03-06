@@ -6,6 +6,10 @@ const authRoutes = require('./routes/auth');
 const assessmentRoutes = require('./routes/assessment');
 const chatbotRoutes = require('./routes/chatbot');
 const userRoutes = require('./routes/user');
+const doctorAuthRoutes = require('./routes/doctorAuth');
+const doctorRoutes = require('./routes/doctor');
+const adminAuthRoutes = require('./routes/adminAuth');
+const adminRoutes = require('./routes/admin');
 const { getPCOSPrediction, getChatbotResponse } = require('./services/gemini');
 
 const app = express();
@@ -21,6 +25,10 @@ app.use('/api/assessment', assessmentRoutes);
 app.use('/api/ai-report', assessmentRoutes); // Alias for compatibility with user request
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/doctor', doctorAuthRoutes);
+app.use('/api/doctors', doctorRoutes);
+app.use('/api/admin', adminAuthRoutes);
+app.use('/api/admin/data', adminRoutes);
 
 // Debug route — test Gemini directly from within the server process
 app.get('/api/debug-gemini', async (req, res) => {

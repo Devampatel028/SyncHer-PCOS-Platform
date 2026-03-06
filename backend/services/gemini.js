@@ -3,7 +3,7 @@ console.log("🔥 GEMINI SERVICE LOADED - v3");
 const { GoogleGenAI } = require("@google/genai");
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-const FREE_MODEL = "gemini-3-flash-preview";
+const FREE_MODEL = "gemini-2.5-flash";
 
 // ================= PCOS PREDICTION =================
 const getPCOSPrediction = async (userData) => {
@@ -154,7 +154,7 @@ Respond with ONLY this JSON (all fields required, tailored specifically to this 
 const getChatbotResponse = async (context, userMessage) => {
   try {
     const prompt = `
-You are SyncHer AI Assistant — a compassionate expert in PCOS care and women's health.
+You are Saheli AI Assistant — a compassionate expert in PCOS care and women's health.
 
 User Health Context:
 ${JSON.stringify(context, null, 2)}
