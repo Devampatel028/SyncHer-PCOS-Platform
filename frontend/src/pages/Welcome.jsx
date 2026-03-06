@@ -51,7 +51,7 @@ const Welcome = () => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#E88C9A]"></span>
             </span>
-            Medical-backed PCOS Intelligence
+            Medically-based PCOS Intelligence
           </div>
 
           {/* Headline */}
@@ -64,30 +64,11 @@ const Welcome = () => {
             Your intelligent companion for PCOS management. AI-powered risk predictions, personalized dietary plans, and 24/7 symptom tracking—all in one clinical-grade platform.
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <button
-              onClick={() => navigate('/register')}
-              className="w-full sm:w-auto px-8 py-4 bg-[#E88C9A] hover:bg-[#D97A88] text-white rounded-2xl text-lg font-bold shadow-sm hover:shadow-md transition-all">
-              Start Your Free Assessment
-            </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="w-full sm:w-auto px-8 py-4 bg-white hover:bg-rose-50 text-[#5C3A4D] border border-rose-100 rounded-2xl text-lg font-bold shadow-sm transition-all">
-              View Demo Dashboard
-            </button>
-          </div>
+          {/* CTAs Removed */}
 
-          {/* Social Proof */}
-          <div className="pt-8 border-t border-slate-200/60 max-w-3xl mx-auto">
-            <p className="text-sm font-medium text-slate-500 uppercase tracking-widest mb-6">Trusted by 500k+ women globally</p>
-            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale">
-              <div className="text-xl font-bold font-serif">HealthTech</div>
-              <div className="text-xl font-bold tracking-widest">CLINICAL</div>
-              <div className="text-xl font-bold items-center flex gap-1"><span className="text-2xl">⚡</span> Pulse</div>
-              <div className="text-xl font-bold font-mono">/WOMEN</div>
-            </div>
-          </div>
+
+          {/* Social Proof Removed - Moved to bottom */}
+
         </div>
       </section>
 
@@ -149,9 +130,20 @@ const Welcome = () => {
           <p className="text-lg text-[#4A4A4A]/80 font-medium mb-10 max-w-2xl mx-auto">Join half a million women who have already transformed their approach to PCOS management.</p>
           <button
             onClick={() => navigate('/register')}
-            className="px-10 py-5 bg-[#E88C9A] hover:bg-[#D97A88] text-white rounded-2xl text-lg font-bold shadow-sm hover:shadow-md transition-all">
+            className="px-10 py-5 bg-[#E88C9A] hover:bg-[#D97A88] text-white rounded-2xl text-lg font-bold shadow-sm hover:shadow-md transition-all mb-16">
             Get Started for Free
           </button>
+
+          {/* Social Proof - Moved here */}
+          <div className="pt-16 border-t border-slate-200/60 max-w-3xl mx-auto">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-8">Trusted by 500k+ women globally</p>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-40 grayscale transition-opacity hover:opacity-100 duration-500">
+              <div className="text-xl font-bold font-serif italic text-slate-900">HealthTech</div>
+              <div className="text-xl font-bold tracking-[0.3em] text-slate-900 border-x px-4 border-slate-200">CLINICAL</div>
+              <div className="text-xl font-bold items-center flex gap-1 text-slate-900 underline underline-offset-4 decoration-rose-200">Pulse</div>
+              <div className="text-xl font-bold font-mono text-slate-900">/WOMEN</div>
+            </div>
+          </div>
         </div>
       </section>
 

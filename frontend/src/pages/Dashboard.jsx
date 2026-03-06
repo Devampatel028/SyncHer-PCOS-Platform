@@ -1,28 +1,68 @@
 ﻿import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { apiCall } from '../services/api';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [report, setReport] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifs, setShowNotifs] = useState(false);
+  const notifRef = useRef(null);
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [reportData, profileData] = await Promise.all([
+        const [reportData, profileData, notifData] = await Promise.all([
           apiCall('/ai-report/latest', 'GET').catch(() => null),
-          apiCall('/user/profile', 'GET').catch(() => null)
+          apiCall('/user/profile', 'GET').catch(() => null),
+          apiCall('/doctors/notifications', 'GET').catch(() => [])
         ]);
         if (reportData) setReport(reportData);
         if (profileData) setProfile(profileData);
+        if (notifData && Array.isArray(notifData)) setNotifications(notifData);
       } catch (err) {
         console.error(err);
       }
     };
     fetchData();
   }, []);
+
+  // Close notif panel on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (notifRef.current && !notifRef.current.contains(e.target)) setShowNotifs(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const markAsRead = async (id) => {
+    try {
+      await apiCall(`/doctors/notifications/${id}/read`, 'PUT');
+      setNotifications(prev => prev.map(n => n._id === id ? { ...n, read: true } : n));
+    } catch (err) { console.error(err); }
+  };
+
+  const markAllRead = async () => {
+    try {
+      await Promise.all(notifications.filter(n => !n.read).map(n => apiCall(`/doctors/notifications/${n._id}/read`, 'PUT')));
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    } catch (err) { console.error(err); }
+  };
+
+  const timeAgo = (date) => {
+    const mins = Math.floor((Date.now() - new Date(date)) / 60000);
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    const days = Math.floor(hrs / 24);
+    return `${days}d ago`;
+  };
 
   const modules = [
     { title: 'Diet Plan', icon: '🥗', route: '/dashboard/diet', desc: 'Personalized meal & nutrition advice', color: 'emerald', border: 'border-emerald-200', text: 'text-emerald-700', bg: 'bg-emerald-50' },
@@ -36,21 +76,81 @@ const Dashboard = () => {
   return (
     <div className="space-y-8 animate-fade-in font-sans">
 
-      {/* Welcome Banner — Solid Premium SaaS aesthetic */}
+      {/* Welcome Banner */}
       <div className="relative overflow-hidden rounded-3xl p-8 md:p-10 bg-gradient-to-br from-[#E88C9A] to-[#D97A88] border border-rose-100 shadow-[0_8px_30px_rgb(232,140,154,0.2)] text-white">
         <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
           <svg className="w-64 h-64 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13.5h-13L12 6.5z" /></svg>
         </div>
-        <div className="relative z-10">
-          <p className="text-rose-100 text-sm font-bold mb-2 tracking-widest uppercase">Overview</p>
-          <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight drop-shadow-sm">
-            Hi, {user?.name || user?.email?.split('@')[0] || 'User'}
-          </h2>
-          <div className="flex flex-wrap items-center gap-3">
-            {report && (
-              <span className="px-4 py-2 rounded-xl text-xs font-bold bg-white/20 backdrop-blur-md text-white border border-rose-100/50 tracking-wide uppercase shadow-sm">
-                Overall Risk Class: {report.riskLevel}
-              </span>
+        <div className="relative z-10 flex items-start justify-between">
+          <div>
+            <p className="text-rose-100 text-sm font-bold mb-2 tracking-widest uppercase">Overview</p>
+            <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight drop-shadow-sm">
+              Hi, {profile?.name || user?.name || user?.email?.split('@')[0] || 'User'}
+            </h2>
+            <div className="flex flex-wrap items-center gap-3">
+              {report && (
+                <span className="px-4 py-2 rounded-xl text-xs font-bold bg-white/20 backdrop-blur-md text-white border border-rose-100/50 tracking-wide uppercase shadow-sm">
+                  Overall Risk Class: {report.riskLevel}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Notification Bell */}
+          <div className="relative" ref={notifRef}>
+            <button onClick={() => setShowNotifs(!showNotifs)}
+              className="relative w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center hover:bg-white/30 transition-all border border-white/20 shadow-sm">
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-[10px] font-black text-white flex items-center justify-center animate-pulse shadow-sm">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
+
+            {/* Notification Panel */}
+            {showNotifs && (
+              <div className="absolute right-0 top-14 w-80 md:w-96 bg-white rounded-3xl shadow-2xl border border-rose-50 z-50 overflow-hidden">
+                <div className="px-5 py-4 border-b border-rose-50 flex items-center justify-between bg-[#FFF8F6]">
+                  <h3 className="text-sm font-extrabold text-[#5C3A4D]">Notifications</h3>
+                  {unreadCount > 0 && (
+                    <button onClick={markAllRead} className="text-xs font-bold text-[#E88C9A] hover:text-[#D97A88] transition-colors">
+                      Mark all read
+                    </button>
+                  )}
+                </div>
+                <div className="max-h-80 overflow-y-auto">
+                  {notifications.length === 0 ? (
+                    <div className="p-8 text-center">
+                      <div className="text-3xl mb-2">🔔</div>
+                      <p className="text-sm text-[#4A4A4A] font-medium">No notifications yet</p>
+                    </div>
+                  ) : (
+                    notifications.map(notif => (
+                      <div key={notif._id}
+                        onClick={() => !notif.read && markAsRead(notif._id)}
+                        className={`px-5 py-4 border-b border-rose-50 cursor-pointer transition-all hover:bg-[#FFF8F6] ${!notif.read ? 'bg-violet-50/50' : ''}`}>
+                        <div className="flex items-start gap-3">
+                          <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-sm flex-shrink-0 ${notif.type === 'appointment' ? 'bg-violet-50 text-violet-600' : 'bg-rose-50 text-rose-600'}`}>
+                            {notif.type === 'appointment' ? '📅' : '🔔'}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className={`text-sm leading-relaxed ${!notif.read ? 'text-[#5C3A4D] font-bold' : 'text-[#4A4A4A] font-medium'}`}>
+                              {notif.message}
+                            </p>
+                            <p className="text-xs text-[#4A4A4A]/50 font-medium mt-1">{timeAgo(notif.createdAt)}</p>
+                          </div>
+                          {!notif.read && (
+                            <div className="w-2 h-2 bg-[#E88C9A] rounded-full flex-shrink-0 mt-2"></div>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
             )}
           </div>
         </div>

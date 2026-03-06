@@ -20,7 +20,7 @@ const Register = ({ onLogin }) => {
     try {
       const data = await apiCall('/auth/register', 'POST', { name, phone, email, password });
       if (data.token) {
-        onLogin(data);
+        onLogin({ ...data, name, email });
         navigate('/awareness');
       } else {
         setError(data.message || 'Registration failed');

@@ -11,6 +11,7 @@ const ProfileDropdown = ({ onLogout }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
+  const [dropdownPos, setDropdownPos] = useState({ left: 0, bottom: 0 });
 
   // Notifications
   const [expandedNotif, setExpandedNotif] = useState(null);
@@ -36,6 +37,7 @@ const ProfileDropdown = ({ onLogout }) => {
   const [reportForm, setReportForm] = useState({ type: 'Bug', description: '' });
 
   const dropdownRef = useRef(null);
+  const buttonRef = useRef(null);
   const navigate = useNavigate();
 
   // ============ FETCH PROFILE ============
@@ -171,7 +173,7 @@ const ProfileDropdown = ({ onLogout }) => {
       const data = await apiCall('/user/profile', 'GET');
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'syncher_my_data.json'; a.click();
+      const a = document.createElement('a'); a.href = url; a.download = 'saheli_my_data.json'; a.click();
       URL.revokeObjectURL(url);
       showStatus('✅ Data downloaded');
     } catch { showStatus('Service temporarily unavailable'); }
@@ -366,7 +368,8 @@ const ProfileDropdown = ({ onLogout }) => {
           { key: 'aiAlerts', label: 'AI Alerts' },
           { key: 'healthWarnings', label: 'Health Warnings' }
         ].map(pref => (
-          <label key={pref.key} className="flex items-center justify-between py-2 cursor-pointer border-b border-rose-50 last:border-0 last:pb-0">
+          <label key={pref.key} className="flex items-center justify-between py-2 cursor-pointer border-b border-rose-50 last:border-0 last:pb-0"
+            onClick={() => handleNotifPrefToggle(pref.key)}>
             <span className="text-xs font-bold text-[#4A4A4A]">{pref.label}</span>
             <div className={`w-8 h-4 rounded-full relative transition-all ${notifPrefs[pref.key] ? 'bg-[#8FBF9F]' : 'bg-rose-100'}`}>
               <div className={`w-3 h-3 bg-white rounded-full absolute top-0.5 shadow transition-all ${notifPrefs[pref.key] ? 'left-[18px]' : 'left-0.5'}`} />
@@ -391,7 +394,7 @@ const ProfileDropdown = ({ onLogout }) => {
           <p className="text-sm font-black text-[#5C3A4D]">📋 Consent Settings</p>
           {[
             { key: 'dataCollection', label: 'Health Data Collection', desc: 'Allow collection of health assessment data' },
-            { key: 'analytics', label: 'Usage Analytics', desc: 'Help improve SyncHer with anonymous usage data' },
+            { key: 'analytics', label: 'Usage Analytics', desc: 'Help improve Saheli with anonymous usage data' },
             { key: 'marketing', label: 'Health Tips & Updates', desc: 'Receive PCOS care tips via email' },
           ].map(c => (
             <label key={c.key} className="flex items-start gap-3 py-2 cursor-pointer border-b border-rose-50 last:border-0 last:pb-0"
@@ -439,7 +442,7 @@ const ProfileDropdown = ({ onLogout }) => {
   // ============ SECTION: HELP ============
   const faqs = [
     { q: 'What is PCOS?', a: 'Polycystic Ovary Syndrome (PCOS) is a hormonal disorder causing enlarged ovaries with small cysts. It affects 1 in 10 women of reproductive age.' },
-    { q: 'How does SyncHer help?', a: 'SyncHer uses AI to analyze your health data, predict PCOS risk, and provide personalized diet, exercise, and lifestyle recommendations.' },
+    { q: 'How does Saheli help?', a: 'Saheli uses AI to analyze your health data, predict PCOS risk, and provide personalized diet, exercise, and lifestyle recommendations.' },
     { q: 'Is my health data secure?', a: 'Yes. Your data is encrypted and stored securely. You can download or delete your data at any time from Privacy & Data settings.' },
     { q: 'Can I share my report with my doctor?', a: 'Yes! Use the "Download My Data" option in Privacy & Data to export your health report as a JSON file you can share.' },
   ];
@@ -521,17 +524,37 @@ const ProfileDropdown = ({ onLogout }) => {
     settings: renderSettings, privacy: renderPrivacy, help: renderHelp
   };
 
+  const toggleOpen = () => {
+    if (!isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownPos({
+        left: rect.left,
+        bottom: window.innerHeight - rect.top + 8
+      });
+    }
+    setIsOpen(!isOpen);
+    setActiveSection(null);
+    setEditMode(false);
+    setConfirmDelete(false);
+    setStatusMsg('');
+  };
+
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div ref={dropdownRef}>
       <button
-        onClick={() => { setIsOpen(!isOpen); setActiveSection(null); setEditMode(false); setConfirmDelete(false); setStatusMsg(''); }}
-        className="w-10 h-10 bg-[#E88C9A] rounded-2xl flex items-center justify-center text-white font-bold hover:bg-[#D97A88] transition-all hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
+        ref={buttonRef}
+        onClick={toggleOpen}
+        className="w-full text-left px-4 py-3.5 rounded-2xl transition-all duration-300 flex items-center gap-3 text-sm font-semibold text-[#4A4A4A] hover:bg-white hover:text-[#5C3A4D] hover:shadow-sm border border-transparent hover:border-rose-50 cursor-pointer select-none"
       >
-        {profile?.name?.charAt(0).toUpperCase() || profile?.email?.charAt(0).toUpperCase() || 'U'}
+        <span className="text-xl opacity-70">⚙️</span>
+        Settings
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-14 w-80 max-h-[75vh] bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-rose-50 overflow-hidden z-50">
+        <div
+          className="fixed w-80 max-h-[75vh] bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-rose-50 overflow-hidden z-[60]"
+          style={{ left: dropdownPos.left, bottom: dropdownPos.bottom }}
+        >
           {/* Banner */}
           <div className="relative overflow-hidden bg-[#FFF8F6] p-5 text-[#5C3A4D] border-b border-rose-50">
             <div className="absolute -right-6 -top-6 w-24 h-24 bg-[#E88C9A] rounded-full opacity-10 blur-xl"></div>

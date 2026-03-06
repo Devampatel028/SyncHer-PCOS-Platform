@@ -17,7 +17,7 @@ const Login = ({ onLogin }) => {
       const data = await apiCall('/auth/login', 'POST', { email, password });
       if (data?.token) {
         localStorage.setItem("token", data.token);
-        onLogin(data);
+        onLogin({ ...data, email });
 
         // Check if user already has an AI report — if yes, skip to dashboard
         try {

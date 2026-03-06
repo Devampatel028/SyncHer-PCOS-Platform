@@ -13,6 +13,7 @@ const DashboardLayout = ({ onLogout }) => {
     { title: 'Stress Management', icon: '🍃', route: '/dashboard/stress' },
     { title: 'Skin & Hair Care', icon: '✨', route: '/dashboard/skin-hair' },
     { title: 'AI Assistant', icon: '🤖', route: '/dashboard/assistant' },
+    { title: 'Doctor Consultancy', icon: '🩺', route: '/dashboard/doctors' },
   ];
 
   const isActive = (route) => {
@@ -22,8 +23,8 @@ const DashboardLayout = ({ onLogout }) => {
 
   return (
     <div className="min-h-screen bg-[#FFF8F6] flex font-sans">
-      {/* Sidebar */}
-      <aside className="w-64 hidden md:flex flex-col fixed min-h-screen bg-[#FFF8F6] border-r border-rose-100 z-40">
+      {/* Sidebar — fixed, full height */}
+      <aside className="w-64 hidden md:flex flex-col fixed h-screen bg-[#FFF8F6] border-r border-rose-100 z-40 overflow-visible">
         {/* Logo */}
         <div className="p-6 border-b border-rose-100">
           <div className="flex items-center gap-3">
@@ -58,22 +59,24 @@ const DashboardLayout = ({ onLogout }) => {
               {mod.title}
             </button>
           ))}
-        </nav>
 
-        {/* Logout */}
-        <div className="p-4 border-t border-rose-100">
+          {/* Divider */}
+          <div className="border-t border-rose-100 my-3"></div>
+
+          {/* Settings — same style as modules */}
+          <ProfileDropdown onLogout={onLogout} />
+
+          {/* Logout — same style as modules */}
           <button onClick={onLogout}
-            className="w-full px-4 py-3 text-rose-500 font-semibold bg-white border border-rose-100 hover:bg-rose-50 hover:text-rose-600 rounded-2xl transition-all text-sm flex items-center gap-2 select-none shadow-sm pb-3">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            Sign Out Securely
+            className="w-full text-left px-4 py-3.5 rounded-2xl transition-all duration-300 flex items-center gap-3 text-sm font-semibold text-rose-500 hover:bg-rose-50 hover:text-rose-600 hover:shadow-sm border border-transparent hover:border-rose-100 select-none">
+            <span className="text-xl opacity-70">🚪</span>
+            Sign Out
           </button>
-        </div>
+        </nav>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 md:ml-64 min-h-screen flex flex-col relative w-full overflow-x-hidden">
+      {/* Main Content — scrollable */}
+      <main className="flex-1 md:ml-64 h-screen flex flex-col relative w-full overflow-x-hidden overflow-y-auto">
         {/* Top Header */}
         <header className="sticky top-0 z-30 flex justify-between items-center px-6 py-4 md:px-10 md:py-6 bg-[#FFF8F6]/80 backdrop-blur-md border-b border-rose-100">
           <div>
@@ -85,7 +88,6 @@ const DashboardLayout = ({ onLogout }) => {
               <span className="w-2.5 h-2.5 bg-[#8FBF9F] rounded-full animate-pulse" />
               <span className="text-sm text-[#8FBF9F] font-bold select-none uppercase tracking-wider">Care Active</span>
             </div>
-            <ProfileDropdown onLogout={onLogout} />
           </div>
         </header>
 

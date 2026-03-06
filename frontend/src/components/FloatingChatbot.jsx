@@ -4,7 +4,7 @@ import { apiCall } from "../services/api";
 const FloatingChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: "assistant", text: "Hi! I'm SyncHer AI 💙 How can I help with your PCOS care today?" }
+    { role: "assistant", text: "Hi! I'm Saheli AI 💙 How can I help with your PCOS care today?" }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,7 @@ const FloatingChatbot = () => {
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center text-lg backdrop-blur-sm">🤖</div>
               <div>
-                <span className="font-bold text-sm block">SyncHer AI</span>
+                <span className="font-bold text-sm block">Saheli AI</span>
                 <span className="text-xs text-violet-100 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" /> Always here to help
                 </span>

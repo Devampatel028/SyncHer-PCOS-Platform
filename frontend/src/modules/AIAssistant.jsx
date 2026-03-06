@@ -2,7 +2,7 @@
 import { apiCall } from '../services/api';
 
 const AIAssistant = () => {
-  const [messages, setMessages] = useState([{ role: 'assistant', text: "Hello! I'm your SyncHer AI Assistant. How can I assist with your clinical PCOS protocol today?" }]);
+  const [messages, setMessages] = useState([{ role: 'assistant', text: "Hello! I'm your Saheli AI Assistant. How can I assist with your clinical PCOS protocol today?" }]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const chatEndRef = useRef(null);
