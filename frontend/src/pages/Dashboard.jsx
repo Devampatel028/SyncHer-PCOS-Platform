@@ -7,6 +7,7 @@ const Dashboard = () => {
   const [report, setReport] = useState(null);
   const [profile, setProfile] = useState(null);
   const [notifications, setNotifications] = useState([]);
+  const [skinAnalysis, setSkinAnalysis] = useState(null);
   const [showNotifs, setShowNotifs] = useState(false);
   const notifRef = useRef(null);
   const user = JSON.parse(localStorage.getItem('user'));
@@ -14,14 +15,16 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [reportData, profileData, notifData] = await Promise.all([
+        const [reportData, profileData, notifData, skinData] = await Promise.all([
           apiCall('/ai-report/latest', 'GET').catch(() => null),
           apiCall('/user/profile', 'GET').catch(() => null),
-          apiCall('/doctors/notifications', 'GET').catch(() => [])
+          apiCall('/doctors/notifications', 'GET').catch(() => []),
+          apiCall('/opencv/my-analyses', 'GET').catch(() => [])
         ]);
         if (reportData) setReport(reportData);
         if (profileData) setProfile(profileData);
         if (notifData && Array.isArray(notifData)) setNotifications(notifData);
+        if (skinData && skinData.length > 0) setSkinAnalysis(skinData[0]);
       } catch (err) {
         console.error(err);
       }
@@ -222,6 +225,27 @@ const Dashboard = () => {
                 </div>
                 <div className="mt-auto">
                   <h3 className="text-xl font-black text-[#5C3A4D] leading-tight block">{report.menstrualIrregularity || 'N/A'}</h3>
+                </div>
+              </div>
+
+              {/* Skin Analysis card */}
+              <div className="bg-white p-6 rounded-3xl border border-rose-50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-[#FFF8F6] rounded-xl flex items-center justify-center text-lg border border-rose-100/50 shadow-sm text-slate-600">✨</div>
+                  <p className="text-xs font-bold text-[#5C3A4D]/60 uppercase tracking-widest">Skin Health</p>
+                </div>
+                <div className="mt-auto">
+                  {skinAnalysis ? (
+                    <>
+                      <h3 className="text-3xl font-black text-[#5C3A4D] mb-1">{skinAnalysis.acneLevel}</h3>
+                      <p className="text-xs text-[#E88C9A] font-bold uppercase tracking-wide">{skinAnalysis.detectedSpots} spots detected</p>
+                    </>
+                  ) : (
+                    <>
+                      <h3 className="text-xl font-black text-slate-300 mb-1">No Scan</h3>
+                      <p className="text-xs text-slate-400 font-medium italic">Visit Skin & Hair care</p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

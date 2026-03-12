@@ -33,6 +33,12 @@ SyncHer is an AI-powered PCOS prediction and personalized care platform that gui
 2. Run `npm install`
 3. Run `npm run dev`
 
+### OpenCV Skin Analysis Service (Port 8000)
+1. Navigate to `/opencv_service`
+2. Run `pip install -r requirements.txt`
+3. Run `python app.py` (or use the root `run_opencv.bat` on Windows)
+4. Ensure the service is running on **port 8000**.
+
 ## Data Flow
 1. User registers/logs in.
 2. User reads PCOS awareness info.

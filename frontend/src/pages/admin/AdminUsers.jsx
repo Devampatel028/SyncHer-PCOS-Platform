@@ -25,51 +25,56 @@ const AdminUsers = () => {
     };
 
     if (loading) return (
-        <div className="flex items-center justify-center h-full">
-            <div className="w-12 h-12 border-4 border-emerald-100 border-t-emerald-500 rounded-full animate-spin"></div>
+        <div className="flex items-center justify-center h-[60vh]">
+            <div className="w-16 h-16 border-4 border-[#E2E8F0] border-t-[#2D4536] rounded-full animate-spin"></div>
         </div>
     );
 
     return (
-        <div className="animate-fade-in">
-            <header className="mb-10 flex justify-between items-end">
+        <div className="animate-fade-in space-y-8 pb-20">
+            <header className="flex justify-between items-end">
                 <div>
-                    <h1 className="text-4xl font-black text-[#2D4536] tracking-tight mb-2">Active Users</h1>
-                    <p className="text-[#6BA37D] font-bold uppercase tracking-widest text-xs">Patient Management • {users.length} Registered Individuals</p>
+                    <h1 className="text-5xl font-black text-[#1A202C] tracking-tight mb-3">Patient Registry</h1>
+                    <p className="text-[#718096] font-bold uppercase tracking-[0.3em] text-xs flex items-center gap-2">
+                        <span className="w-8 h-[1px] bg-[#68D391]"></span>
+                        {users.length} Active Platform Members
+                    </p>
                 </div>
             </header>
 
-            <div className="bg-white rounded-[2.5rem] border border-emerald-50 shadow-[0_8px_30px_rgb(0,0,0,0.02)] overflow-hidden">
-                <table className="w-full text-left">
-                    <thead className="bg-emerald-50/50 border-b border-emerald-50">
-                        <tr>
-                            <th className="px-8 py-5 text-[10px] font-black text-[#6BA37D] uppercase tracking-widest">User Profile</th>
-                            <th className="px-8 py-5 text-[10px] font-black text-[#6BA37D] uppercase tracking-widest">Health Metrics</th>
-                            <th className="px-8 py-5 text-[10px] font-black text-[#6BA37D] uppercase tracking-widest">PCOS Status</th>
-                            <th className="px-8 py-5 text-[10px] font-black text-[#6BA37D] uppercase tracking-widest">Actions</th>
+            <div className="bg-white rounded-[2.5rem] border border-[#E2E8F0] shadow-[0_10px_40px_rgba(0,0,0,0.02)] overflow-hidden">
+                <table className="w-full text-left border-collapse">
+                    <thead>
+                        <tr className="bg-[#F7FAFC] border-b border-[#EDF2F7]">
+                            <th className="px-10 py-6 text-[11px] font-black text-[#A0AEC0] uppercase tracking-[0.2em]">Patient Profile</th>
+                            <th className="px-10 py-6 text-[11px] font-black text-[#A0AEC0] uppercase tracking-[0.2em]">Physical Metrics</th>
+                            <th className="px-10 py-6 text-[11px] font-black text-[#A0AEC0] uppercase tracking-[0.2em]">Clinical Status</th>
+                            <th className="px-10 py-6 text-[11px] font-black text-[#A0AEC0] uppercase tracking-[0.2em] text-right">Access</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-emerald-50/50">
+                    <tbody className="divide-y divide-[#EDF2F7]">
                         {users.map((user) => (
-                            <tr key={user._id} className="hover:bg-emerald-50/20 transition-colors">
-                                <td className="px-8 py-6">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-lg shadow-inner">👤</div>
+                            <tr key={user._id} className="group hover:bg-[#F7FAFC] transition-all duration-300">
+                                <td className="px-10 py-8">
+                                    <div className="flex items-center gap-5">
+                                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center text-xl shadow-inner group-hover:scale-110 transition-transform duration-500">
+                                            {user.name.charAt(0)}
+                                        </div>
                                         <div>
-                                            <p className="text-sm font-black text-[#2D4536]">{user.name}</p>
-                                            <p className="text-xs text-slate-400 font-bold">{user.email}</p>
+                                            <p className="text-base font-black text-[#1A202C] leading-none mb-1.5">{user.name}</p>
+                                            <p className="text-xs text-[#718096] font-bold">{user.email}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-8 py-6">
-                                    <div className="flex gap-4">
-                                        <div className="text-center">
-                                            <p className="text-[10px] font-black text-slate-300 uppercase tracking-tighter">Age</p>
-                                            <p className="text-sm font-black text-[#6BA37D]">{user.age || '--'}</p>
+                                <td className="px-10 py-8">
+                                    <div className="flex gap-8">
+                                        <div>
+                                            <p className="text-[10px] font-black text-[#A0AEC0] uppercase tracking-tighter mb-1">Age</p>
+                                            <p className="text-sm font-black text-[#2D4536]">{user.age || '--'}</p>
                                         </div>
-                                        <div className="text-center">
-                                            <p className="text-[10px] font-black text-slate-300 uppercase tracking-tighter">BMI</p>
-                                            <p className="text-sm font-black text-[#6BA37D]">
+                                        <div>
+                                            <p className="text-[10px] font-black text-[#A0AEC0] uppercase tracking-tighter mb-1">BMI</p>
+                                            <p className="text-sm font-black text-[#2D4536]">
                                                 {user.weight && user.height 
                                                     ? (user.weight / ((user.height/100)*(user.height/100))).toFixed(1) 
                                                     : '--'
@@ -78,21 +83,22 @@ const AdminUsers = () => {
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-8 py-6">
-                                    <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider ${
+                                <td className="px-10 py-8">
+                                    <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
                                         user.pcosStatus === 'positive' 
                                         ? 'bg-rose-50 text-rose-600 border border-rose-100' 
                                         : 'bg-emerald-50 text-emerald-600 border border-emerald-100'
                                     }`}>
-                                        {user.pcosStatus || 'Unknown'}
+                                        <span className={`w-1.5 h-1.5 rounded-full ${user.pcosStatus === 'positive' ? 'bg-rose-500' : 'bg-emerald-500 animate-pulse'}`}></span>
+                                        {user.pcosStatus || 'Pending'}
                                     </span>
                                 </td>
-                                <td className="px-8 py-6">
+                                <td className="px-10 py-8 text-right">
                                     <button 
                                         onClick={() => setSelectedUser(user)}
-                                        className="text-xs font-black text-emerald-600 hover:text-emerald-800 transition-colors uppercase tracking-widest underline underline-offset-4"
+                                        className="px-6 py-2.5 bg-white border border-[#E2E8F0] rounded-xl text-[10px] font-black text-[#2D4536] uppercase tracking-widest hover:bg-[#2D4536] hover:text-white hover:border-[#2D4536] transition-all duration-300 shadow-sm"
                                     >
-                                        View Full Profile
+                                        View Clinical File
                                     </button>
                                 </td>
                             </tr>
@@ -101,48 +107,57 @@ const AdminUsers = () => {
                 </table>
             </div>
 
-            {/* User Detail Modal */}
+            {/* User Detail Modal - Modern Slide-over feel */}
             {selectedUser && (
-                <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[100] flex items-center justify-center p-6" onClick={() => setSelectedUser(null)}>
+                <div className="fixed inset-0 bg-[#1A202C]/60 backdrop-blur-md z-[100] flex items-center justify-center p-6" onClick={() => setSelectedUser(null)}>
                     <div 
-                        className="bg-white rounded-[3rem] w-full max-w-2xl overflow-hidden shadow-[0_30px_100px_rgba(0,0,0,0.1)] border border-emerald-50 animate-scale-up"
+                        className="bg-white rounded-[3.5rem] w-full max-w-2xl overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.2)] border border-[#E2E8F0] animate-scale-up"
                         onClick={e => e.stopPropagation()}
                     >
-                        <header className="p-10 border-b border-emerald-50 flex items-center justify-between">
-                            <div className="flex items-center gap-6">
-                                <div className="w-20 h-20 rounded-[1.5rem] bg-emerald-50 flex items-center justify-center text-4xl shadow-inner">👤</div>
+                        <header className="p-12 border-b border-[#EDF2F7] flex items-center justify-between relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-64 h-64 -mr-32 -mt-32 bg-emerald-50 opacity-40 rounded-full blur-3xl"></div>
+                            <div className="flex items-center gap-8 relative z-10">
+                                <div className="w-24 h-24 rounded-[2rem] bg-gradient-to-br from-[#2D4536] to-[#1E2F24] flex items-center justify-center text-4xl text-white shadow-2xl">
+                                    {selectedUser.name.charAt(0)}
+                                </div>
                                 <div>
-                                    <h2 className="text-3xl font-black text-[#2D4536] tracking-tight uppercase">{selectedUser.name}</h2>
-                                    <p className="text-sm font-bold text-[#6BA37D] tracking-widest uppercase italic">{selectedUser.email}</p>
+                                    <h2 className="text-4xl font-black text-[#1A202C] tracking-tight uppercase leading-none mb-2">{selectedUser.name}</h2>
+                                    <p className="text-sm font-bold text-[#68D391] tracking-[0.2em] uppercase italic">{selectedUser.email}</p>
                                 </div>
                             </div>
-                            <button onClick={() => setSelectedUser(null)} className="w-10 h-10 bg-slate-50 hover:bg-slate-100 rounded-full flex items-center justify-center transition-all text-xl">✕</button>
+                            <button 
+                                onClick={() => setSelectedUser(null)} 
+                                className="w-12 h-12 bg-[#F7FAFC] hover:bg-[#EDF2F7] rounded-full flex items-center justify-center transition-all text-xl text-[#718096] relative z-10"
+                            >✕</button>
                         </header>
 
-                        <div className="p-10">
-                            <h3 className="text-xs font-black text-[#6BA37D] uppercase tracking-[0.3em] mb-6">Patient Health Record</h3>
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                        <div className="p-12">
+                            <h3 className="text-[11px] font-black text-[#A0AEC0] uppercase tracking-[0.4em] mb-8">Clinical Health Record</h3>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
                                 {[
-                                    { label: 'Age', val: selectedUser.age },
-                                    { label: 'Weight (kg)', val: selectedUser.weight },
-                                    { label: 'Height (cm)', val: selectedUser.height },
-                                    { label: 'Cycle Length', val: selectedUser.cycleLength },
-                                    { label: 'PCOS Detected', val: selectedUser.pcosStatus, highlight: true },
-                                    { label: 'Member Since', val: new Date(selectedUser.createdAt).toLocaleDateString() }
+                                    { label: 'Baseline Age', val: `${selectedUser.age || 'N/A'} Yrs` },
+                                    { label: 'Current Weight', val: `${selectedUser.weight || 'N/A'} kg` },
+                                    { label: 'Measured Height', val: `${selectedUser.height || 'N/A'} cm` },
+                                    { label: 'Avg Cycle Length', val: `${selectedUser.cycleLength || 'N/A'} Days` },
+                                    { label: 'Medical Status', val: selectedUser.pcosStatus, highlight: true },
+                                    { label: 'System Access', val: new Date(selectedUser.createdAt).toLocaleDateString() }
                                 ].map(item => (
-                                    <div key={item.label} className="p-5 bg-emerald-50/20 rounded-2xl border border-emerald-50/50">
-                                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">{item.label}</p>
-                                        <p className={`text-base font-black ${item.highlight ? 'text-emerald-700' : 'text-[#2D4536]'} uppercase`}>{item.val || 'N/A'}</p>
+                                    <div key={item.label} className="p-6 bg-[#F7FAFC] rounded-3xl border border-[#EDF2F7] transition-all hover:border-[#CBD5E0]">
+                                        <p className="text-[10px] font-black text-[#A0AEC0] uppercase tracking-widest mb-2">{item.label}</p>
+                                        <p className={`text-lg font-black ${item.highlight ? 'text-[#2D4536]' : 'text-[#1A202C]'} uppercase tracking-tight`}>{item.val || 'NULL'}</p>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        <footer className="p-8 bg-emerald-50/30 flex justify-between items-center">
-                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Confidential Medical Data • Admin Access</span>
+                        <footer className="px-12 py-10 bg-[#F7FAFC] flex justify-between items-center border-t border-[#EDF2F7]">
+                            <div className="flex items-center gap-3">
+                                <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></span>
+                                <span className="text-[10px] font-black text-[#A0AEC0] uppercase tracking-widest italic">Protected Data • Level 1 Clearance</span>
+                            </div>
                             <div className="flex gap-4">
-                                <button className="px-6 py-2.5 bg-white border border-emerald-100 text-[#6BA37D] rounded-xl text-[10px] font-black uppercase tracking-widest hover:border-emerald-300 transition-all shadow-sm">Export Report</button>
-                                <button className="px-6 py-2.5 bg-[#E88C9A] text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#D97A88] transition-all shadow-md">Flag Account</button>
+                                <button className="px-8 py-3.5 bg-white border border-[#E2E8F0] text-[#2D4536] rounded-2xl text-[10px] font-black uppercase tracking-widest hover:border-[#2D4536] transition-all shadow-sm">Export PDF</button>
+                                <button className="px-8 py-3.5 bg-[#2D4536] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#1E2F24] transition-all shadow-xl shadow-emerald-900/10">Modify Access</button>
                             </div>
                         </footer>
                     </div>

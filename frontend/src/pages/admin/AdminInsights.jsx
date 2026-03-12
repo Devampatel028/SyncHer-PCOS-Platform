@@ -24,108 +24,142 @@ const AdminInsights = () => {
     };
 
     if (loading) return (
-        <div className="flex items-center justify-center h-full">
-            <div className="w-12 h-12 border-4 border-emerald-100 border-t-emerald-500 rounded-full animate-spin"></div>
+        <div className="flex items-center justify-center h-[60vh]">
+            <div className="w-16 h-16 border-4 border-[#E2E8F0] border-t-[#2D4536] rounded-full animate-spin"></div>
         </div>
     );
 
     return (
-        <div className="animate-fade-in">
-            <header className="mb-10">
-                <h1 className="text-4xl font-black text-[#2D4536] tracking-tight mb-2">Platform Insights</h1>
-                <p className="text-[#6BA37D] font-bold uppercase tracking-widest text-xs">Community Support Trends • Medical Data Visualization</p>
+        <div className="animate-fade-in space-y-12 pb-20">
+            <header className="flex justify-between items-end">
+                <div>
+                    <h1 className="text-5xl font-black text-[#1A202C] tracking-tight mb-3">Platform Insights</h1>
+                    <p className="text-[#718096] font-bold uppercase tracking-[0.3em] text-xs flex items-center gap-2">
+                        <span className="w-8 h-[1px] bg-[#68D391]"></span>
+                        Real-time Analytics & Growth Metrics
+                    </p>
+                </div>
+                <div className="bg-white px-6 py-3 rounded-2xl border border-[#E2E8F0] shadow-sm flex items-center gap-4">
+                    <span className="text-[10px] font-black text-[#A0AEC0] uppercase tracking-widest">Last Updated</span>
+                    <span className="text-sm font-black text-[#2D4536]">{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
             </header>
 
             {/* Quick Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {[
-                    { label: 'Total Patients', val: stats.userCount, icon: '👥', color: 'bg-emerald-50 text-emerald-600' },
-                    { label: 'Medical Experts', val: stats.doctorCount, icon: '🩺', color: 'bg-indigo-50 text-indigo-600' },
-                    { label: 'AI Consultations', val: '2,482', icon: '🤖', color: 'bg-rose-50 text-rose-600' },
-                    { label: 'Success Rate', val: '94%', icon: '🚀', color: 'bg-amber-50 text-amber-600' }
+                    { label: 'Registered Patients', val: stats.userCount, icon: '👥', color: 'from-[#68D391] to-[#48BB78]', bg: 'bg-emerald-50/50' },
+                    { label: 'Medical Experts', val: stats.doctorCount, icon: '🩺', color: 'from-[#6366F1] to-[#4F46E5]', bg: 'bg-indigo-50/50' },
+                    { label: 'AI Assessments', val: '2,942', icon: '🤖', color: 'from-[#F56565] to-[#E53E3E]', bg: 'bg-rose-50/50' },
+                    { label: 'Satisfaction', val: '98%', icon: '⭐️', color: 'from-[#ECC94B] to-[#D69E2E]', bg: 'bg-amber-50/50' }
                 ].map(card => (
-                    <div key={card.label} className="bg-white p-6 rounded-[2rem] border border-emerald-50 shadow-sm hover:shadow-md transition-all">
-                        <div className={`w-12 h-12 ${card.color} rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-inner`}>
+                    <div key={card.label} className="bg-white p-8 rounded-[2.5rem] border border-[#E2E8F0] shadow-[0_10px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.05)] transition-all duration-500 group relative overflow-hidden">
+                        <div className={`absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 bg-gradient-to-br ${card.color} opacity-[0.03] rounded-full transition-transform duration-700 group-hover:scale-150`}></div>
+                        <div className={`w-14 h-14 ${card.bg} rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm`}>
                             {card.icon}
                         </div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{card.label}</p>
-                        <p className="text-3xl font-black text-[#2D4536]">{card.val}</p>
+                        <p className="text-[11px] font-black text-[#A0AEC0] uppercase tracking-[0.15em] mb-2">{card.label}</p>
+                        <p className="text-4xl font-black text-[#1A202C] tracking-tighter">{card.val}</p>
                     </div>
                 ))}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Visual Chart 1: Consultation Trends */}
-                <div className="bg-white p-8 rounded-[3rem] border border-emerald-50 shadow-sm relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-8 opacity-10 blur-xl scale-150 -z-10 bg-emerald-500 rounded-full w-40 h-40"></div>
-                    <div className="mb-8">
-                        <h3 className="text-xl font-black text-[#2D4536] uppercase">Monthly Engagement</h3>
-                        <p className="text-xs font-bold text-[#6BA37D] uppercase tracking-widest italic">Growth in medical consultations vs AI assessments</p>
+            <div className="grid grid-cols-1 xl:grid-cols-5 gap-10">
+                {/* Visual Chart 1: Monthly Trends */}
+                <div className="xl:col-span-3 bg-white p-10 rounded-[3rem] border border-[#E2E8F0] shadow-sm relative group overflow-hidden">
+                    <div className="flex justify-between items-start mb-12">
+                        <div>
+                            <h3 className="text-2xl font-black text-[#1A202C] tracking-tight">Growth Analytics</h3>
+                            <p className="text-xs font-bold text-[#718096] uppercase tracking-widest mt-1">Monthly trend of platform utilization</p>
+                        </div>
+                        <div className="flex gap-4">
+                            <div className="flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-[#2D4536]"></span>
+                                <span className="text-[10px] font-black pointer-events-none text-[#718096] uppercase tracking-widest">Medical</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-[#E88C9A]"></span>
+                                <span className="text-[10px] font-black pointer-events-none text-[#718096] uppercase tracking-widest">Digital</span>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div className="flex items-end h-64 gap-4 mt-10">
+                    <div className="flex items-end h-80 gap-6 mt-4 relative">
+                        {/* Grid Lines */}
+                        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-[0.03]">
+                            {[1, 2, 3, 4].map(i => <div key={i} className="w-full h-[1px] bg-black"></div>)}
+                        </div>
+
                         {stats.trends.map((item, idx) => (
-                            <div key={item.month} className="flex-1 flex flex-col justify-end gap-2 group p-2">
-                                <div className="flex gap-1.5 h-full items-end">
+                            <div key={item.month} className="flex-1 flex flex-col justify-end gap-3 group/bar z-10 transition-transform hover:scale-[1.02]">
+                                <div className="flex gap-2 h-full items-end pb-1">
                                     <div 
                                         style={{ height: `${(item.consultations / 300) * 100}%` }}
-                                        className="w-full bg-[#6BA37D] rounded-t-lg transition-all duration-700 group-hover:bg-[#5a8c6a] shadow-lg shadow-emerald-200/50"
+                                        className="w-full bg-[#2D4536] rounded-xl transition-all duration-1000 group-hover/bar:bg-[#1E2F24] shadow-lg shadow-emerald-900/10 min-h-[4px]"
                                     ></div>
                                     <div 
                                         style={{ height: `${(item.assessments / 800) * 100}%` }}
-                                        className="w-full bg-[#E88C9A] rounded-t-lg transition-all duration-700 group-hover:bg-[#d47685] shadow-lg shadow-rose-200/50 opacity-40 hover:opacity-100"
+                                        className="w-full bg-[#E88C9A] rounded-xl transition-all duration-1000 group-hover/bar:bg-[#D97A88] shadow-lg shadow-rose-900/10 min-h-[4px]"
                                     ></div>
                                 </div>
-                                <span className="text-[10px] font-black text-slate-400 text-center uppercase tracking-widest pt-2">{item.month}</span>
+                                <span className="text-[11px] font-black text-[#A0AEC0] text-center uppercase tracking-widest">{item.month}</span>
                             </div>
                         ))}
-                    </div>
-                    
-                    <div className="mt-8 flex gap-6">
-                        <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-[#6BA37D]"></span>
-                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Doctors</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full bg-[#E88C9A] opacity-40"></span>
-                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">AI Tools</span>
-                        </div>
                     </div>
                 </div>
 
                 {/* Visual Chart 2: PCOS Distribution */}
-                <div className="bg-white p-8 rounded-[3rem] border border-emerald-50 shadow-sm relative">
-                    <div className="mb-8">
-                        <h3 className="text-xl font-black text-[#2D4536] uppercase">Risk Assessment Distribution</h3>
-                        <p className="text-xs font-bold text-[#6BA37D] uppercase tracking-widest italic">Community-wide health analysis</p>
+                <div className="xl:col-span-2 bg-white p-10 rounded-[3rem] border border-[#E2E8F0] shadow-sm flex flex-col">
+                    <div className="mb-10">
+                        <h3 className="text-2xl font-black text-[#1A202C] tracking-tight">Risk Distribution</h3>
+                        <p className="text-xs font-bold text-[#718096] uppercase tracking-widest mt-1">Clinical case classification</p>
                     </div>
 
-                    <div className="flex items-center justify-center h-64">
-                        <div className="relative w-48 h-48 rounded-full border-[1.5rem] border-emerald-50 flex items-center justify-center">
-                            <div className="text-center">
-                                <p className="text-4xl font-black text-emerald-600">82%</p>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Report Rate</p>
-                            </div>
+                    <div className="flex-1 flex flex-col justify-center items-center">
+                        <div className="relative w-64 h-64 mb-10 flex items-center justify-center">
+                            <div className="absolute inset-0 rounded-full border-[1.75rem] border-[#F7FAFC] shadow-inner"></div>
                             
-                            {/* SVG Pie Chart overlay */}
-                            <svg className="absolute -inset-6 w-60 h-60 -rotate-90 pointer-events-none">
-                                <circle cx="120" cy="120" r="105" fill="none" stroke="#6BA37D" strokeWidth="20" strokeDasharray="330 660"></circle>
-                                <circle cx="120" cy="120" r="105" fill="none" stroke="#E88C9A" strokeWidth="20" strokeDasharray="180 660" strokeDashoffset="-330" opacity="0.6"></circle>
-                                <circle cx="120" cy="120" r="105" fill="none" stroke="#8FBF9F" strokeWidth="20" strokeDasharray="150 660" strokeDashoffset="-510" opacity="0.4"></circle>
+                            {/* SVG Pie Chart overlay - Fixed scaling and alignment */}
+                            <svg className="absolute inset-0 w-64 h-64 -rotate-90 drop-shadow-2xl">
+                                <circle 
+                                    cx="128" cy="128" r="112" 
+                                    fill="none" stroke="#2D4536" strokeWidth="24" 
+                                    strokeDasharray={`${(40/100)*703.7} 1000`} 
+                                    className="transition-all duration-1000 stroke-linecap-round"
+                                />
+                                <circle 
+                                    cx="128" cy="128" r="112" 
+                                    fill="none" stroke="#E88C9A" strokeWidth="24" 
+                                    strokeDasharray={`${(35/100)*703.7} 1000`} 
+                                    strokeDashoffset={`-${(40/100)*703.7}`}
+                                    className="transition-all duration-1000 opacity-[0.8]"
+                                />
+                                <circle 
+                                    cx="128" cy="128" r="112" 
+                                    fill="none" stroke="#8FBF9F" strokeWidth="24" 
+                                    strokeDasharray={`${(25/100)*703.7} 1000`} 
+                                    strokeDashoffset={`-${(75/100)*703.7}`}
+                                    className="transition-all duration-1000 opacity-[0.5]"
+                                />
                             </svg>
-                        </div>
-                    </div>
 
-                    <div className="mt-10 space-y-4">
-                        {stats.pcosDistribution.map((item, idx) => (
-                            <div key={item.name} className="flex items-center justify-between p-3 rounded-2xl bg-emerald-50/20 border border-emerald-50/50">
-                                <div className="flex items-center gap-3">
-                                    <span className={`w-2 h-2 rounded-full ${idx === 0 ? 'bg-[#6BA37D]' : idx === 1 ? 'bg-[#E88C9A]' : 'bg-[#8FBF9F]'}`}></span>
-                                    <span className="text-[10px] font-bold text-[#4A4A4A] uppercase tracking-widest">{item.name}</span>
-                                </div>
-                                <span className="text-xs font-black text-[#6BA37D]">{item.value}%</span>
+                            <div className="relative z-10 text-center">
+                                <p className="text-5xl font-black text-[#1A202C] tracking-tighter">100%</p>
+                                <p className="text-[10px] font-black text-[#A0AEC0] uppercase tracking-widest mt-1">Database Coverage</p>
                             </div>
-                        ))}
+                        </div>
+
+                        <div className="w-full space-y-3 mt-auto">
+                            {stats.pcosDistribution.map((item, idx) => (
+                                <div key={item.name} className="flex items-center justify-between p-4 rounded-2xl bg-[#F7FAFC] border border-[#EDF2F7] hover:bg-white hover:shadow-md transition-all duration-300 group">
+                                    <div className="flex items-center gap-4">
+                                        <div className={`w-3 h-3 rounded-full ${idx === 0 ? 'bg-[#2D4536]' : idx === 1 ? 'bg-[#E88C9A]' : 'bg-[#8FBF9F]'}`}></div>
+                                        <span className="text-[11px] font-bold text-[#4A5568] uppercase tracking-wider group-hover:text-[#1A202C]">{item.name}</span>
+                                    </div>
+                                    <span className="text-sm font-black text-[#2D4536]">{item.value}%</span>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

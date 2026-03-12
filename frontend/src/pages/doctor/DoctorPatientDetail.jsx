@@ -7,25 +7,60 @@ const DoctorPatientDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
+  const [skinReports, setSkinReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [savingReview, setSavingReview] = useState(null); // ID of report being reviewed
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('doctorToken');
-        const res = await fetch(`${API_URL}/doctors/patient/${id}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const result = await res.json();
+        const [patientRes, skinRes] = await Promise.all([
+          fetch(`${API_URL}/doctors/patient/${id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          fetch(`${API_URL}/opencv/patient/${id}/analyses`, {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+        ]);
+
+        const result = await patientRes.json();
+        const skinData = await skinRes.json();
+
         setData(result);
+        if (Array.isArray(skinData)) setSkinReports(skinData);
       } catch (err) {
-        console.error('Failed to load patient data:', err);
+        console.error('Failed to load data:', err);
       } finally {
         setLoading(false);
       }
     };
     fetchData();
   }, [id]);
+
+  const handleSaveReview = async (reportId, notes) => {
+    setSavingReview(reportId);
+    try {
+      const token = localStorage.getItem('doctorToken');
+      const res = await fetch(`${API_URL}/opencv/analysis/${reportId}/review`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ doctorNotes: notes })
+      });
+
+      if (res.ok) {
+        const updatedReport = await res.json();
+        setSkinReports(prev => prev.map(r => r._id === reportId ? updatedReport.analysis : r));
+      }
+    } catch (err) {
+      console.error('Failed to save review:', err);
+    } finally {
+      setSavingReview(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -204,6 +239,120 @@ const DoctorPatientDetail = () => {
           <p className="text-sm text-[#4A4A4A] font-medium">This patient hasn't completed their health assessment yet.</p>
         </div>
       )}
+
+      {/* Patient Skin Reports Section */}
+      <div className="space-y-6 pt-8 border-t border-rose-50">
+        <div className="flex items-center justify-between">
+          <h3 className="text-xl font-extrabold text-[#5C3A4D]">Patient Skin Reports</h3>
+          <span className="px-3 py-1 bg-rose-50 text-[#E88C9A] text-xs font-bold rounded-full border border-rose-100 uppercase tracking-widest">
+            {skinReports.length} Analysis Found
+          </span>
+        </div>
+
+        {skinReports.length === 0 ? (
+          <div className="bg-white p-8 rounded-3xl border border-dashed border-rose-200 text-center">
+            <p className="text-[#4A4A4A] font-medium text-sm italic">No skin scans uploaded by this patient yet.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6">
+            {skinReports.map((report) => (
+              <div key={report._id} className="bg-white rounded-[2.5rem] border border-rose-50 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-rose-50">
+                  {/* Image Thumbnail */}
+                  <div className="w-full md:w-64 aspect-square md:aspect-auto flex-shrink-0 bg-slate-50 relative group">
+                    <img
+                      src={`http://localhost:5000${report.imageUrl}`}
+                      alt="Patient Skin"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-4 left-4">
+                      <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border shadow-lg ${report.acneLevel === 'Low' ? 'bg-emerald-500 text-white border-emerald-400' :
+                          report.acneLevel === 'Moderate' ? 'bg-amber-500 text-white border-amber-400' :
+                            'bg-rose-500 text-white border-rose-400'
+                        }`}>
+                        {report.acneLevel}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Analysis Data */}
+                  <div className="flex-1 p-8 space-y-6">
+                    <div className="flex flex-wrap items-center justify-between gap-4">
+                      <div>
+                        <p className="text-[10px] font-black text-[#5C3A4D]/40 uppercase tracking-[0.2em] mb-1">Scan Date</p>
+                        <p className="text-[#5C3A4D] font-bold">{new Date(report.createdAt).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[10px] font-black text-[#5C3A4D]/40 uppercase tracking-[0.2em] mb-1">Spots Count</p>
+                        <p className="text-2xl font-black text-[#E88C9A]">{report.detectedSpots}</p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="text-[10px] font-black text-[#5C3A4D]/40 uppercase tracking-[0.2em] mb-3">Affected Regions</p>
+                      <div className="flex flex-wrap gap-2">
+                        {report.affectedAreas?.map((area, idx) => (
+                          <span key={idx} className="px-3 py-1.5 bg-slate-50 text-[#5C3A4D] text-xs font-bold rounded-xl border border-rose-100">
+                            {area}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Review Section */}
+                    <div className="pt-6 border-t border-rose-50">
+                      {report.doctorViewed ? (
+                        <div className="p-5 bg-emerald-50/50 border border-emerald-100 rounded-3xl">
+                          <p className="text-[10px] font-black text-emerald-700 uppercase tracking-widest mb-2 flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                            Review Complete
+                          </p>
+                          <p className="text-sm text-emerald-900/80 font-medium italic leading-relaxed">
+                            "{report.doctorNotes || 'No notes provided'}"
+                          </p>
+                          <button
+                            onClick={() => {
+                              const newNotes = prompt('Edit review notes:', report.doctorNotes);
+                              if (newNotes !== null) handleSaveReview(report._id, newNotes);
+                            }}
+                            className="text-[10px] font-black text-emerald-700 uppercase mt-4 hover:underline"
+                          >
+                            Edit Review
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
+                            Awaiting Review
+                          </p>
+                          <div className="flex flex-col gap-3">
+                            <textarea
+                              id={`notes-${report._id}`}
+                              placeholder="Enter clinical notes for this patient..."
+                              className="w-full h-24 p-4 rounded-2xl border border-rose-100 text-sm focus:outline-none focus:ring-2 focus:ring-[#E88C9A] transition-all bg-[#FFF8F6] font-medium"
+                            ></textarea>
+                            <button
+                              onClick={() => {
+                                const notes = document.getElementById(`notes-${report._id}`).value;
+                                handleSaveReview(report._id, notes);
+                              }}
+                              disabled={savingReview === report._id}
+                              className="w-full md:w-auto self-end bg-[#E88C9A] hover:bg-[#D97A88] text-white px-8 py-3 rounded-2xl text-xs font-black uppercase tracking-widest transition-all shadow-md active:scale-95 disabled:bg-slate-300"
+                            >
+                              {savingReview === report._id ? 'Saving...' : 'Save Review'}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

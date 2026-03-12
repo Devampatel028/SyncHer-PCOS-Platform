@@ -10,6 +10,7 @@ const doctorAuthRoutes = require('./routes/doctorAuth');
 const doctorRoutes = require('./routes/doctor');
 const adminAuthRoutes = require('./routes/adminAuth');
 const adminRoutes = require('./routes/admin');
+const opencvRoutes = require('./routes/opencv');
 const { getPCOSPrediction, getChatbotResponse } = require('./services/gemini');
 
 const app = express();
@@ -18,6 +19,9 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Serve uploaded images
+app.use('/uploads', require('express').static(require('path').join(__dirname, 'uploads')));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -29,6 +33,7 @@ app.use('/api/doctor', doctorAuthRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/admin', adminAuthRoutes);
 app.use('/api/admin/data', adminRoutes);
+app.use('/api/opencv', opencvRoutes);
 
 // Debug route — test Gemini directly from within the server process
 app.get('/api/debug-gemini', async (req, res) => {

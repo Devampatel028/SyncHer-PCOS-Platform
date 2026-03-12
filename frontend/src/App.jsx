@@ -32,13 +32,13 @@ import { useState } from 'react';
 function ChatbotWrapper() {
   const location = useLocation();
   const hiddenPrefixes = ['/login', '/register', '/doctor', '/admin', '/welcome'];
-  
+
   // Hide on exact root (RoleSelect)
   if (location.pathname === '/') return null;
-  
+
   // Hide on any hidden prefix (login, register, doctor, admin, welcome)
   if (hiddenPrefixes.some(p => location.pathname.startsWith(p))) return null;
-  
+
   return <FloatingChatbot />;
 }
 
