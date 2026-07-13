@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { axiosInstance } from '../../services/api';
 
 const AdminInsights = () => {
     const [stats, setStats] = useState(null);
@@ -11,10 +11,7 @@ const AdminInsights = () => {
 
     const fetchStats = async () => {
         try {
-            const token = localStorage.getItem('adminToken');
-            const res = await axios.get('http://localhost:5000/api/admin/data/stats', {
-                headers: { 'x-auth-token': token }
-            });
+            const res = await axiosInstance.get('/admin/data/stats');
             setStats(res.data);
         } catch (err) {
             console.error('Error fetching stats:', err);

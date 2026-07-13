@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-
-const API_URL = 'http://localhost:5000/api';
+import { apiCall } from '../services/api';
 
 const DoctorLogin = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -15,12 +14,7 @@ const DoctorLogin = ({ onLogin }) => {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(`${API_URL}/doctor/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
+      const data = await apiCall('/doctor/login', 'POST', { email, password });
       if (data?.token) {
         onLogin(data);
         navigate('/doctor/dashboard');
@@ -28,7 +22,7 @@ const DoctorLogin = ({ onLogin }) => {
         setError(data.message || 'Login failed');
       }
     } catch (err) {
-      setError('Login failed. Please check your credentials.');
+      setError(err.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const API_URL = 'http://localhost:5000/api';
+import { BASE_URL as API_URL } from '../../services/api';
 
 const DoctorCalendar = () => {
   const [appointments, setAppointments] = useState([]);

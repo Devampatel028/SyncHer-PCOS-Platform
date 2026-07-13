@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-
-const API_URL = 'http://localhost:5000/api';
+import { API_URL as IMAGE_URL, BASE_URL as API_URL } from '../../services/api';
 
 const DoctorPatientDetail = () => {
   const { id } = useParams();
@@ -261,7 +260,7 @@ const DoctorPatientDetail = () => {
                   {/* Image Thumbnail */}
                   <div className="w-full md:w-64 aspect-square md:aspect-auto flex-shrink-0 bg-slate-50 relative group">
                     <img
-                      src={`http://localhost:5000${report.imageUrl}`}
+                      src={`${IMAGE_URL}${report.imageUrl}`}
                       alt="Patient Skin"
                       className="w-full h-full object-cover"
                     />

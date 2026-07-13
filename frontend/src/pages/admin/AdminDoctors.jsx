@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { axiosInstance } from '../../services/api';
 
 const AdminDoctors = () => {
     const [doctors, setDoctors] = useState([]);
@@ -12,10 +12,7 @@ const AdminDoctors = () => {
 
     const fetchDoctors = async () => {
         try {
-            const token = localStorage.getItem('adminToken');
-            const res = await axios.get('http://localhost:5000/api/admin/data/doctors', {
-                headers: { 'x-auth-token': token }
-            });
+            const res = await axiosInstance.get('/admin/data/doctors');
             setDoctors(res.data);
         } catch (err) {
             console.error('Error fetching doctors:', err);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const API_URL = 'http://localhost:5000/api';
+import { BASE_URL as API_URL } from '../../services/api';
 
 const DoctorPatients = () => {
   const [patients, setPatients] = useState([]);

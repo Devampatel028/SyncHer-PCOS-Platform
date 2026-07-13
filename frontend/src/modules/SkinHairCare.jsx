@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiCall } from '../services/api';
+import { apiCall, API_URL, BASE_URL } from '../services/api';
 
 const SkinHairCare = () => {
   const [report, setReport] = useState(null);
@@ -101,7 +101,7 @@ const SkinHairCare = () => {
       formData.append('image', selectedFile);
 
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/opencv/analyze-skin', {
+      const response = await fetch(`${BASE_URL}/opencv/analyze-skin`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -346,7 +346,7 @@ const SkinHairCare = () => {
                     className="group bg-white rounded-[2rem] border border-rose-50 overflow-hidden hover:border-[#E88C9A] hover:shadow-xl hover:shadow-rose-100/50 transition-all cursor-pointer"
                   >
                     <div className="aspect-video bg-slate-100 relative overflow-hidden">
-                      <img src={`http://localhost:5000${item.imageUrl}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Scan" />
+                      <img src={`${API_URL}${item.imageUrl}`} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Scan" />
                       <div className="absolute top-4 right-4">
                         <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border shadow-lg ${
                           item.acneLevel === 'Low' ? 'bg-emerald-500 text-white border-emerald-400' :

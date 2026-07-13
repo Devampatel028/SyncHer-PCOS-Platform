@@ -37,6 +37,7 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 } // 10 MB
 });
 
+// Local development fallback for python opencv service
 const PYTHON_SERVICE = process.env.OPENCV_SERVICE_URL || 'http://localhost:8000';
 
 // ── POST /api/opencv/analyze-skin ─────────────────────────────────────────────
