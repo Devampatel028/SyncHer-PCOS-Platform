@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../services/api';
 
@@ -8,9 +8,12 @@ const AdminLogin = ({ onLogin }) => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const isSubmitting = useRef(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (isSubmitting.current) return;
+        isSubmitting.current = true;
         setLoading(true);
         setError('');
 
@@ -21,6 +24,7 @@ const AdminLogin = ({ onLogin }) => {
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
         } finally {
+            isSubmitting.current = false;
             setLoading(false);
         }
     };

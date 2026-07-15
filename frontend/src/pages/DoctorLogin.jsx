@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiCall } from '../services/api';
 
@@ -8,9 +8,12 @@ const DoctorLogin = ({ onLogin }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const isSubmitting = useRef(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting.current) return;
+    isSubmitting.current = true;
     setLoading(true);
     setError('');
     try {
@@ -24,6 +27,7 @@ const DoctorLogin = ({ onLogin }) => {
     } catch (err) {
       setError(err.message || 'Login failed. Please check your credentials.');
     } finally {
+      isSubmitting.current = false;
       setLoading(false);
     }
   };
